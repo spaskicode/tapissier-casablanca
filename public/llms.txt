@@ -8,17 +8,17 @@
 - Horaires : Lun–Sam 9h00–19h00
 
 ## Services (pages clés)
-- Réfection & sur-mesure de salon marocain : https://tapissier-casablanca.ma/services/salon-marocain
-- Canapés & fauteuils (retapissage, réparation, sur-mesure) : https://tapissier-casablanca.ma/services/canapes-et-fauteuils
-- Têtes de lit & capitonnage : https://tapissier-casablanca.ma/services/tete-de-lit-et-capitonnage
-- Rideaux & voilages : https://tapissier-casablanca.ma/services/rideaux-et-voilages
-- Tapisserie automobile (sellerie) : https://tapissier-casablanca.ma/services/tapisserie-automobile
-- Chaises & assises : https://tapissier-casablanca.ma/services/chaises
-- Mousse sur mesure (haute densité) : https://tapissier-casablanca.ma/services/mousse-sur-mesure
-- Tissus d'ameublement : https://tapissier-casablanca.ma/services/tissus-ameublement
+- [Réfection et sur-mesure de salon marocain](https://tapissier-casablanca.ma/services/salon-marocain)
+- [Canapés et fauteuils (retapissage, réparation, sur-mesure)](https://tapissier-casablanca.ma/services/canapes-et-fauteuils)
+- [Têtes de lit et capitonnage](https://tapissier-casablanca.ma/services/tete-de-lit-et-capitonnage)
+- [Rideaux et voilages](https://tapissier-casablanca.ma/services/rideaux-et-voilages)
+- [Tapisserie automobile (sellerie)](https://tapissier-casablanca.ma/services/tapisserie-automobile)
+- [Chaises et assises](https://tapissier-casablanca.ma/services/chaises)
+- [Mousse sur mesure (haute densité)](https://tapissier-casablanca.ma/services/mousse-sur-mesure)
+- [Tissus d'ameublement](https://tapissier-casablanca.ma/services/tissus-ameublement)
 
 ## Informations utiles
-- Tarifs / fourchettes de prix : https://tapissier-casablanca.ma/tarifs
-- Réalisations (avant / après) : https://tapissier-casablanca.ma/realisations
-- Devis gratuit : https://tapissier-casablanca.ma/devis-gratuit
-- Blog (guides & inspiration) : https://blog.tapissier-casablanca.ma
+- [Tarifs](https://tapissier-casablanca.ma/tarifs)
+- [Réalisations](https://tapissier-casablanca.ma/realisations)
+- [Devis gratuit](https://tapissier-casablanca.ma/devis-gratuit)
+- [Blog](https://blog.tapissier-casablanca.ma)
