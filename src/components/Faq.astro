@@ -1,0 +1,23 @@
+---
+import { t, type Lang } from '@/i18n/ui';
+import Icon from './Icon.astro';
+interface Props { lang: Lang; items: { question: string; answer: string }[]; title?: string; }
+const { lang, items, title } = Astro.props;
+---
+<section class="container-x py-16" aria-labelledby="faq-title">
+  <div class="max-w-3xl mx-auto">
+    <p class="eyebrow mb-3">FAQ</p>
+    <h2 id="faq-title" class="text-3xl md:text-4xl mb-8">{title ?? t(lang,'faq.title')}</h2>
+    <div class="divide-y divide-[var(--color-line)] border-t border-[var(--color-line)]">
+      {items.map((item) => (
+        <details class="group py-2">
+          <summary class="flex items-center justify-between gap-4 cursor-pointer list-none py-3 font-display font-semibold text-lg">
+            <span>{item.question}</span>
+            <span class="shrink-0 text-[var(--color-copper)] transition-transform group-open:rotate-45"><Icon name="x" size={20} class="rotate-45" /></span>
+          </summary>
+          <div class="pb-4 pr-8 text-[var(--color-muted)] leading-relaxed">{item.answer}</div>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>

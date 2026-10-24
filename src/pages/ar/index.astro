@@ -1,0 +1,173 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import ServiceCard from '@/components/ServiceCard.astro';
+import Faq from '@/components/Faq.astro';
+import Placeholder from '@/components/Placeholder.astro';
+import Icon from '@/components/Icon.astro';
+import { faqSchema } from '@/lib/schema';
+import { business } from '@/data/business';
+import { localizedPath as lp } from '@/i18n/ui';
+
+const lang = 'ar' as const;
+
+const col = (await getCollection('services')).filter((s) => s.data.lang === lang).sort((a, b) => a.data.order - b.data.order);
+const services = col.map((s) => ({ slug: s.data.slug, title: s.data.title, excerpt: s.data.metaDescription, icon: s.data.icon }));
+
+const areaAr = ['الدار البيضاء','المعاريف','أولفا','بورغون','غوتييه','عين الذياب','كاليفورنيا','سيدي معروف','بوسكورة','عين الشق','الفداء','المحمدية'];
+
+const trust = [
+  { icon: 'mapPin', t: 'زيارة منزلية', d: 'أخذ المقاسات عندك في الدار البيضاء الكبرى.' },
+  { icon: 'ruler', t: 'ترميم وتفصيل', d: 'نرمّم أثاثك أو نفصّله حسب الطلب.' },
+  { icon: 'shield', t: 'عمل مضمون', d: 'تشطيب متقن وضمان على التنجيد.' },
+  { icon: 'clock', t: 'عرض سعر مجاني', d: 'عرض واضح ومفصّل دون أي التزام.' },
+];
+
+const steps = [
+  { n: '٠١', t: 'التواصل', d: 'تتصل بنا أو تراسلنا عبر واتساب مع بعض الصور لأثاثك.' },
+  { n: '٠٢', t: 'عرض سعر في المنزل', d: 'نتنقل، نأخذ المقاسات، ونقدم لك عرض سعر مجاني ومفصّل.' },
+  { n: '٠٣', t: 'اختيار القماش', d: 'تختار القماش والتشطيب من بين عيّنات أقمشة التنجيد.' },
+  { n: '٠٤', t: 'التنجيد والتسليم', d: 'نُنجز العمل في الورشة ثم نُرجع لك القطعة جاهزة.' },
+];
+
+const faq = [
+  { question: 'ما الخدمات التي يقدمها منجد بالدار البيضاء؟', answer: 'المنجد والمزخرف بالدار البيضاء يرمّم ويفصّل حسب الطلب: الصالونات المغربية (السداري)، الكنب، الفوتاي، الكراسي، رؤوس الأسرّة، الستائر، الإسفنج وتنجيد السيارات. في «منجد الدار البيضاء» نغطي جميع هذه الخدمات، مع زيارة منزلية وعرض سعر مجاني.' },
+  { question: 'هل ترمّمون الأثاث أم تصنعون الجديد فقط؟', answer: 'الاثنان معاً. نُنجّد كنبك وفوتايك وصالونك المغربي الموجود (تغيير القماش والإسفنج وإصلاح الهيكل)، كما نفصّل قطعاً جديدة حسب مقاساتك والقماش الذي تختاره.' },
+  { question: 'هل تتنقلون إلى المنازل بالدار البيضاء؟', answer: 'نعم. نتنقل لأخذ المقاسات وتقديم عرض السعر في جميع أنحاء الدار البيضاء الكبرى: المعاريف، أولفا، بورغون، غوتييه، عين الذياب، سيدي معروف، بوسكورة، عين الشق، الفداء والمحمدية.' },
+  { question: 'كم يكلف تنجيد صالون مغربي بالدار البيضاء؟', answer: 'يعتمد الثمن على المساحة والقماش المختار وحالة الإسفنج والهيكل. نقدم لك سعراً واضحاً بعد أخذ المقاسات. اطّلع على صفحة الأسعار واطلب عرض سعر مجاني للحصول على تقدير دقيق.' },
+  { question: 'ما هي المدة المتوقعة؟', answer: 'تختلف المدة حسب القطعة وحجم العمل في الورشة. نؤكدها لك عند تقديم عرض السعر، قبل بدء الأشغال، لتعرف بالضبط متى تستلم أثاثك.' },
+  { question: 'ما هي أحياء الدار البيضاء التي تغطونها؟', answer: 'نتدخل في جميع أنحاء الدار البيضاء وضواحيها. توجد صفحات مخصّصة للمعاريف، أولفا، بورغون وغوتييه، عين الذياب وكاليفورنيا، سيدي معروف، بوسكورة، عين الشق والفداء.' },
+];
+---
+<BaseLayout
+  lang={lang}
+  path="/"
+  title="منجد بالدار البيضاء — ترميم وتفصيل حسب الطلب | منجد الدار البيضاء"
+  description="منجد ومزخرف محترف بالدار البيضاء: ترميم وتفصيل الصالونات المغربية والكنب والفوتاي ورؤوس الأسرّة. زيارة منزلية وعرض سعر مجاني."
+  schemas={[faqSchema(faq)]}
+>
+  <section class="relative bg-[var(--color-cream)] overflow-hidden">
+    <div class="container-x grid lg:grid-cols-2 gap-10 items-center py-14 lg:py-20">
+      <div>
+        <p class="eyebrow mb-4">منجد ومزخرف بالدار البيضاء</p>
+        <h1 class="text-4xl md:text-5xl xl:text-6xl leading-[1.15] mb-5">
+          امنح أثاثك <span class="text-[var(--color-copper)]">حياة ثانية</span>
+        </h1>
+        <div class="answer-box mb-6 max-w-xl">
+          «منجد الدار البيضاء» حرفي منجد ومزخرف مقرّه الدار البيضاء. نقوم
+          <strong> بالترميم والتفصيل حسب الطلب</strong> للصالونات المغربية والكنب والفوتاي
+          ورؤوس الأسرّة ومقاعد السيارات. زيارة منزلية في الدار البيضاء الكبرى و
+          <strong>عرض سعر مجاني</strong>.
+        </div>
+        <div class="flex flex-wrap gap-3">
+          <a href={lp(lang,'/devis-gratuit')} class="btn btn-primary">عرض سعر مجاني <Icon name="arrowRight" size={18} /></a>
+          <a href={`https://wa.me/${business.whatsapp}`} class="btn btn-wa"><Icon name="whatsapp" size={18} /> واتساب</a>
+          <a href={`tel:${business.phone}`} class="btn btn-ghost" dir="ltr"><Icon name="phone" size={17} /> {business.phoneDisplay}</a>
+        </div>
+        <ul class="flex flex-wrap gap-x-6 gap-y-2 mt-7 text-sm text-[var(--color-muted)]">
+          <li class="flex items-center gap-2"><Icon name="check" size={16} class="text-[var(--color-copper)]" /> ترميم وتفصيل</li>
+          <li class="flex items-center gap-2"><Icon name="check" size={16} class="text-[var(--color-copper)]" /> زيارة منزلية</li>
+          <li class="flex items-center gap-2"><Icon name="check" size={16} class="text-[var(--color-copper)]" /> الدار البيضاء الكبرى</li>
+        </ul>
+      </div>
+      <div class="relative">
+        <Placeholder alt="صالون مغربي بعد التنجيد لدى منجد الدار البيضاء، بقماش جديد ووسائد حسب الطلب" ratio="4/3" icon="sofa" label="صالون مغربي — قبل / بعد" />
+      </div>
+    </div>
+  </section>
+
+  <section class="container-x py-12">
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      {trust.map((x) => (
+        <div class="flex items-start gap-3">
+          <span class="grid place-items-center w-11 h-11 rounded-lg bg-[var(--color-cream)] text-[var(--color-copper)] shrink-0"><Icon name={x.icon} size={22} /></span>
+          <div>
+            <p class="font-display font-bold">{x.t}</p>
+            <p class="text-sm text-[var(--color-muted)]">{x.d}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="container-x py-14" aria-labelledby="services-title">
+    <div class="flex flex-wrap items-end justify-between gap-4 mb-9">
+      <div>
+        <p class="eyebrow mb-3">خدماتنا</p>
+        <h2 id="services-title" class="text-3xl md:text-4xl max-w-xl">ترميم وتفصيل لكل قطعة أثاث في بيتك</h2>
+      </div>
+      <a href={lp(lang,'/services')} class="btn btn-ghost">كل الخدمات <Icon name="arrowRight" size={17} /></a>
+    </div>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      {services.map((s) => <ServiceCard lang={lang} slug={s.slug} title={s.title} excerpt={s.excerpt} icon={s.icon} />)}
+    </div>
+  </section>
+
+  <section class="bg-[var(--color-ink)] text-white/80">
+    <div class="container-x py-16 grid lg:grid-cols-2 gap-10 items-center">
+      <div>
+        <p class="eyebrow mb-3" style="color:var(--color-copper)">حرفتان</p>
+        <h2 class="text-white text-3xl md:text-4xl mb-5">تجديد الموجود أو صناعة الجديد</h2>
+        <p class="mb-6 text-white/70">هل تتمسك بصالونك المغربي القديم أو بكنبتك؟ نمنحها حياة ثانية. وهل تبدأ من الصفر؟ نفصّلها حسب مقاساتك وبالقماش الذي تختاره.</p>
+        <div class="grid sm:grid-cols-2 gap-5">
+          <div class="bg-white/5 rounded-[var(--radius-card)] p-5">
+            <h3 class="text-white text-lg mb-2">الترميم والتنجيد</h3>
+            <p class="text-sm text-white/70">تغيير القماش والإسفنج، وإصلاح النوابض والأحزمة والهيكل. مثالي للاحتفاظ بأثاث جيد الصنع.</p>
+          </div>
+          <div class="bg-white/5 rounded-[var(--radius-card)] p-5">
+            <h3 class="text-white text-lg mb-2">التفصيل حسب الطلب</h3>
+            <p class="text-sm text-white/70">صالون مغربي، رأس سرير، مصطبة أو كنبة تُصمَّم بمقاساتك لتنسجم تماماً مع غرفتك.</p>
+          </div>
+        </div>
+        <a href={lp(lang,'/realisations')} class="btn btn-primary mt-7">شاهد أعمالنا <Icon name="arrowRight" size={18} /></a>
+      </div>
+      <Placeholder alt="ورشة تنجيد بالدار البيضاء: تقطيع الإسفنج وتركيب قماش التنجيد" ratio="1/1" icon="scissors" label="الورشة — حرفة وإتقان" />
+    </div>
+  </section>
+
+  <section class="container-x py-16">
+    <p class="eyebrow mb-3">كيف نشتغل</p>
+    <h2 class="text-3xl md:text-4xl mb-10 max-w-xl">من أول اتصال إلى التسليم</h2>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {steps.map((s) => (
+        <div class="relative">
+          <span class="font-display font-extrabold text-5xl text-[var(--color-copper-soft)]">{s.n}</span>
+          <h3 class="text-lg mt-2 mb-1.5">{s.t}</h3>
+          <p class="text-sm text-[var(--color-muted)]">{s.d}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="bg-[var(--color-cream)]">
+    <div class="container-x py-16">
+      <div class="flex flex-wrap items-end justify-between gap-4 mb-8">
+        <div>
+          <p class="eyebrow mb-3">المناطق المخدومة</p>
+          <h2 class="text-3xl md:text-4xl max-w-xl">منجد قريب منك بالدار البيضاء</h2>
+        </div>
+        <a href={lp(lang,'/zones')} class="btn btn-ghost">كل المناطق <Icon name="arrowRight" size={17} /></a>
+      </div>
+      <div class="flex flex-wrap gap-2.5">
+        {areaAr.map((z) => (
+          <span class="inline-flex items-center gap-1.5 bg-white border border-[var(--color-line)] rounded-[var(--radius-pill)] px-4 py-2 text-sm">
+            <Icon name="mapPin" size={15} class="text-[var(--color-copper)]" /> {z}
+          </span>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <Faq lang={lang} items={faq} title="أسئلة شائعة حول خدمات التنجيد" />
+
+  <section class="container-x pb-20">
+    <div class="rounded-[var(--radius-card)] bg-[var(--color-copper)] text-white p-10 md:p-14 text-center">
+      <h2 class="text-white text-3xl md:text-4xl mb-3">عندك أثاث للترميم أو للتفصيل؟</h2>
+      <p class="text-white/85 max-w-xl mx-auto mb-7">أرسل لنا بعض الصور عبر واتساب أو اتصل بنا. عرض سعر مجاني وزيارة منزلية في جميع أنحاء الدار البيضاء الكبرى.</p>
+      <div class="flex flex-wrap justify-center gap-3">
+        <a href={`https://wa.me/${business.whatsapp}`} class="btn bg-white text-[var(--color-ink)] hover:bg-white/90"><Icon name="whatsapp" size={18} /> واتساب</a>
+        <a href={`tel:${business.phone}`} class="btn btn-dark" dir="ltr"><Icon name="phone" size={17} /> {business.phoneDisplay}</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,41 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import Icon from '@/components/Icon.astro';
+import { breadcrumbSchema } from '@/lib/schema';
+import { localizedPath as lp } from '@/i18n/ui';
+
+const lang = 'ar' as const;
+const zones = (await getCollection('zones'))
+  .filter((z) => z.data.lang === lang)
+  .sort((a, b) => a.data.order - b.data.order);
+const crumbs = [{ name: 'الرئيسية', url: '/ar' }, { name: 'المناطق', url: '/ar/zones' }];
+---
+<BaseLayout
+  lang={lang}
+  path="/zones"
+  title="منجد بالدار البيضاء — الأحياء المخدومة | منجد الدار البيضاء"
+  description="نتدخل في جميع أنحاء الدار البيضاء الكبرى: المعاريف، أولفا، بورغون، غوتييه، عين الذياب، سيدي معروف، بوسكورة، عين الشق، الفداء. عرض سعر مجاني في المنزل."
+  schemas={[breadcrumbSchema(crumbs)]}
+>
+  <Breadcrumbs crumbs={crumbs} />
+  <section class="container-x pt-8 pb-10">
+    <p class="eyebrow mb-3">المناطق المخدومة</p>
+    <h1 class="text-4xl md:text-5xl mb-5 max-w-2xl">منجد في حيّك بالدار البيضاء</h1>
+    <div class="answer-box max-w-2xl mb-10">
+      نتنقل إلى المنزل لأخذ المقاسات والتسليم في جميع أنحاء <strong>الدار البيضاء الكبرى</strong>.
+      اختر حيّك لمعرفة كيف نتدخل فيه، أو اطلب مباشرة <strong>عرض سعر مجاني</strong>.
+    </div>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      {zones.map((z) => (
+        <a href={lp(lang, `/zones/${z.data.slug}`)} class="card p-6 group">
+          <span class="grid place-items-center w-11 h-11 rounded-lg bg-[var(--color-copper-soft)] text-[var(--color-copper)] mb-4 group-hover:bg-[var(--color-copper)] group-hover:text-white transition"><Icon name="mapPin" size={22} /></span>
+          <h2 class="text-lg mb-1">{z.data.quartier}</h2>
+          <p class="text-sm text-[var(--color-muted)]">{z.data.habitat}</p>
+          <span class="mt-3 inline-flex items-center gap-1.5 text-[var(--color-copper)] font-display font-semibold text-sm">عرض <Icon name="arrowRight" size={15} /></span>
+        </a>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

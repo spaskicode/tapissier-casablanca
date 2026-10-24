@@ -1,0 +1,198 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import ServiceCard from '@/components/ServiceCard.astro';
+import Faq from '@/components/Faq.astro';
+import Placeholder from '@/components/Placeholder.astro';
+import Icon from '@/components/Icon.astro';
+import { faqSchema } from '@/lib/schema';
+import { business } from '@/data/business';
+import { localizedPath as lp } from '@/i18n/ui';
+
+const lang = 'fr' as const;
+
+// Services (data-driven, repli statique si une fiche manque)
+const fallback = [
+  { slug: 'salon-marocain', title: 'Réfection & sur-mesure de salon marocain', excerpt: "Retapissage et fabrication de salons marocains : sedari, banquettes, matelas et coussins, dans le tissu de votre choix.", icon: 'sofa' },
+  { slug: 'canapes-et-fauteuils', title: 'Canapés & fauteuils', excerpt: "Retapissage, réparation et réfection complète de canapés et fauteuils : mousse, ressorts, sangles et tissu.", icon: 'armchair' },
+  { slug: 'tete-de-lit-et-capitonnage', title: 'Têtes de lit & capitonnage', excerpt: "Têtes de lit sur mesure, capitonnées ou lisses, et lits tapissés assortis à votre chambre.", icon: 'bed' },
+  { slug: 'rideaux-et-voilages', title: 'Rideaux & voilages', excerpt: "Confection et pose de rideaux, voilages et stores sur mesure, du salon marocain au séjour moderne.", icon: 'curtain' },
+  { slug: 'tapisserie-automobile', title: 'Tapisserie automobile', excerpt: "Réfection des sièges, du ciel de toit et de la sellerie de votre voiture, en cuir ou en tissu.", icon: 'car' },
+  { slug: 'chaises', title: 'Chaises & assises', excerpt: "Retapissage de chaises de salle à manger et d'assises : garnissage, tissu et finitions.", icon: 'armchair' },
+  { slug: 'mousse-sur-mesure', title: 'Mousse sur mesure', excerpt: "Mousse haute densité découpée à vos dimensions pour canapés, matelas de salon et banquettes.", icon: 'foam' },
+  { slug: 'tissus-ameublement', title: "Tissus d'ameublement", excerpt: "Large choix de tissus d'ameublement résistants : velours, jacquard, simili cuir et anti-taches.", icon: 'fabric' },
+];
+const col = (await getCollection('services')).filter((s) => s.data.lang === lang).sort((a, b) => a.data.order - b.data.order);
+const services = col.length
+  ? col.map((s) => ({ slug: s.data.slug, title: s.data.title, excerpt: s.data.metaDescription, icon: s.data.icon }))
+  : fallback;
+
+const trust = [
+  { icon: 'mapPin', t: 'Déplacement à domicile', d: 'Prise de mesures chez vous dans le Grand Casablanca.' },
+  { icon: 'ruler', t: 'Réfection + sur-mesure', d: 'On rénove vos meubles ou on les fabrique sur mesure.' },
+  { icon: 'shield', t: 'Travail garanti', d: 'Finitions soignées et garantie sur la réfection.' },
+  { icon: 'clock', t: 'Devis gratuit', d: 'Un devis clair et détaillé, sans engagement.' },
+];
+
+const steps = [
+  { n: '01', t: 'Prise de contact', d: "Vous nous appelez ou écrivez sur WhatsApp avec quelques photos de vos meubles." },
+  { n: '02', t: 'Devis à domicile', d: "On se déplace, on prend les mesures et on vous remet un devis gratuit et détaillé." },
+  { n: '03', t: 'Choix du tissu', d: "Vous choisissez le tissu et la finition parmi nos échantillons d'ameublement." },
+  { n: '04', t: 'Réfection & livraison', d: "On retapisse en atelier puis on vous relivre le meuble, prêt à l'emploi." },
+];
+
+const faq = [
+  { question: "Quels services propose un tapissier à Casablanca ?", answer: "Un tapissier-décorateur à Casablanca rénove (retapissage) et fabrique sur mesure : salons marocains (sedari), canapés, fauteuils, chaises, têtes de lit, rideaux, mousses et sellerie automobile. Chez Tapissier Casablanca, nous couvrons l'ensemble de ces prestations, avec déplacement à domicile et devis gratuit." },
+  { question: "Faites-vous la réfection de meubles ou uniquement du neuf ?", answer: "Les deux. Nous retapissons vos canapés, fauteuils et salons marocains existants (changement de tissu, de mousse, réparation de structure), et nous fabriquons aussi des pièces neuves sur mesure selon vos dimensions et votre tissu." },
+  { question: "Vous déplacez-vous à domicile dans Casablanca ?", answer: "Oui. Nous nous déplaçons pour la prise de mesures et le devis dans tout le Grand Casablanca : Maârif, Oulfa, Bourgogne, Gauthier, Aïn Diab, Sidi Maârouf, Bouskoura, Aïn Chock, Al Fida et Mohammedia." },
+  { question: "Combien coûte la réfection d'un salon marocain à Casablanca ?", answer: "Le prix dépend du métrage, du tissu choisi et de l'état de la mousse et de la structure. Nous établissons une fourchette claire après la prise de mesures. Consultez notre page Tarifs et demandez un devis gratuit pour un chiffrage précis." },
+  { question: "Quels délais faut-il prévoir ?", answer: "Le délai varie selon la pièce et la charge de l'atelier. Il est confirmé au moment du devis, avant le début des travaux, pour que vous sachiez exactement quand récupérer votre meuble." },
+  { question: "Quels quartiers de Casablanca desservez-vous ?", answer: "Nous intervenons dans tout Casablanca et sa périphérie. Des pages dédiées existent pour Maârif, Oulfa, Bourgogne-Gauthier, Aïn Diab-Californie, Sidi Maârouf, Bouskoura, Aïn Chock et Al Fida." },
+];
+---
+<BaseLayout
+  lang={lang}
+  path="/"
+  title="Tapissier à Casablanca — Réfection & sur-mesure | Tapissier Casablanca"
+  description="Artisan tapissier-décorateur à Casablanca : réfection et fabrication sur mesure de salons marocains, canapés, fauteuils et têtes de lit. Déplacement à domicile, devis gratuit."
+  schemas={[faqSchema(faq)]}
+>
+  <!-- HERO -->
+  <section class="relative bg-[var(--color-cream)] overflow-hidden">
+    <div class="container-x grid lg:grid-cols-2 gap-10 items-center py-14 lg:py-20">
+      <div>
+        <p class="eyebrow mb-4">Tapissier-décorateur à Casablanca</p>
+        <h1 class="text-4xl md:text-5xl xl:text-6xl leading-[1.05] mb-5">
+          Donnez une seconde vie à vos <span class="text-[var(--color-copper)]">meubles</span>
+        </h1>
+        <div class="answer-box mb-6 max-w-xl">
+          Tapissier Casablanca est un artisan tapissier-décorateur basé à Casablanca. Nous
+          <strong> rénovons et fabriquons sur mesure</strong> salons marocains, canapés, fauteuils,
+          têtes de lit et sièges auto. Déplacement à domicile dans le Grand Casablanca et
+          <strong> devis gratuit</strong>.
+        </div>
+        <div class="flex flex-wrap gap-3">
+          <a href={lp(lang,'/devis-gratuit')} class="btn btn-primary">Devis gratuit <Icon name="arrowRight" size={18} /></a>
+          <a href={`https://wa.me/${business.whatsapp}`} class="btn btn-wa"><Icon name="whatsapp" size={18} /> WhatsApp</a>
+          <a href={`tel:${business.phone}`} class="btn btn-ghost"><Icon name="phone" size={17} /> {business.phoneDisplay}</a>
+        </div>
+        <ul class="flex flex-wrap gap-x-6 gap-y-2 mt-7 text-sm text-[var(--color-muted)]">
+          <li class="flex items-center gap-2"><Icon name="check" size={16} class="text-[var(--color-copper)]" /> Réfection & sur-mesure</li>
+          <li class="flex items-center gap-2"><Icon name="check" size={16} class="text-[var(--color-copper)]" /> Déplacement à domicile</li>
+          <li class="flex items-center gap-2"><Icon name="check" size={16} class="text-[var(--color-copper)]" /> Tout le Grand Casablanca</li>
+        </ul>
+      </div>
+      <div class="relative">
+        <Placeholder alt="Salon marocain retapissé par Tapissier Casablanca, tissu neuf et coussins sur mesure" ratio="4/3" icon="sofa" label="Salon marocain — avant / après" />
+        <div class="hidden sm:flex card !bg-white absolute -bottom-6 -left-6 items-center gap-3 p-4 shadow-xl">
+          <span class="grid place-items-center w-11 h-11 rounded-lg bg-[var(--color-copper-soft)] text-[var(--color-copper)]"><Icon name="star" size={22} /></span>
+          <div>
+            <p class="font-display font-bold leading-tight">Artisan de confiance</p>
+            <p class="text-xs text-[var(--color-muted)]">Casablanca & Grand Casablanca</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRUST -->
+  <section class="container-x py-12">
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      {trust.map((x) => (
+        <div class="flex items-start gap-3">
+          <span class="grid place-items-center w-11 h-11 rounded-lg bg-[var(--color-cream)] text-[var(--color-copper)] shrink-0"><Icon name={x.icon} size={22} /></span>
+          <div>
+            <p class="font-display font-bold">{x.t}</p>
+            <p class="text-sm text-[var(--color-muted)]">{x.d}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="container-x py-14" aria-labelledby="services-title">
+    <div class="flex flex-wrap items-end justify-between gap-4 mb-9">
+      <div>
+        <p class="eyebrow mb-3">Nos services</p>
+        <h2 id="services-title" class="text-3xl md:text-4xl max-w-xl">Réfection et sur-mesure, pour chaque meuble de la maison</h2>
+      </div>
+      <a href={lp(lang,'/services')} class="btn btn-ghost">Tous les services <Icon name="arrowRight" size={17} /></a>
+    </div>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      {services.map((s) => <ServiceCard lang={lang} slug={s.slug} title={s.title} excerpt={s.excerpt} icon={s.icon} />)}
+    </div>
+  </section>
+
+  <!-- REFECTION VS SUR-MESURE -->
+  <section class="bg-[var(--color-ink)] text-white/80">
+    <div class="container-x py-16 grid lg:grid-cols-2 gap-10 items-center">
+      <div>
+        <p class="eyebrow mb-3" style="color:var(--color-copper)">Deux savoir-faire</p>
+        <h2 class="text-white text-3xl md:text-4xl mb-5">Rénover l'existant ou créer du neuf</h2>
+        <p class="mb-6 text-white/70">Vous tenez à votre ancien salon marocain ou à votre canapé&nbsp;? On lui redonne une seconde vie. Vous repartez de zéro&nbsp;? On le fabrique sur mesure, à vos dimensions et dans le tissu que vous choisissez.</p>
+        <div class="grid sm:grid-cols-2 gap-5">
+          <div class="bg-white/5 rounded-[var(--radius-card)] p-5">
+            <h3 class="text-white text-lg mb-2">Réfection / retapissage</h3>
+            <p class="text-sm text-white/70">Changement de tissu et de mousse, reprise des ressorts, sangles et structure. Idéal pour garder un meuble de qualité.</p>
+          </div>
+          <div class="bg-white/5 rounded-[var(--radius-card)] p-5">
+            <h3 class="text-white text-lg mb-2">Fabrication sur mesure</h3>
+            <p class="text-sm text-white/70">Salon marocain, tête de lit, banquette ou canapé conçus à vos dimensions, pour s'adapter parfaitement à votre pièce.</p>
+          </div>
+        </div>
+        <a href={lp(lang,'/realisations')} class="btn btn-primary mt-7">Voir nos réalisations <Icon name="arrowRight" size={18} /></a>
+      </div>
+      <Placeholder alt="Atelier de tapisserie à Casablanca : découpe de mousse et pose de tissu d'ameublement" ratio="1/1" icon="scissors" label="Atelier — savoir-faire" />
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section class="container-x py-16" aria-labelledby="process-title">
+    <p class="eyebrow mb-3">Comment ça marche</p>
+    <h2 id="process-title" class="text-3xl md:text-4xl mb-10 max-w-xl">De la prise de contact à la livraison</h2>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {steps.map((s) => (
+        <div class="relative">
+          <span class="font-display font-extrabold text-5xl text-[var(--color-copper-soft)]">{s.n}</span>
+          <h3 class="text-lg mt-2 mb-1.5">{s.t}</h3>
+          <p class="text-sm text-[var(--color-muted)]">{s.d}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- ZONES -->
+  <section class="bg-[var(--color-cream)]">
+    <div class="container-x py-16">
+      <div class="flex flex-wrap items-end justify-between gap-4 mb-8">
+        <div>
+          <p class="eyebrow mb-3">Zones desservies</p>
+          <h2 class="text-3xl md:text-4xl max-w-xl">Un tapissier proche de chez vous à Casablanca</h2>
+        </div>
+        <a href={lp(lang,'/zones')} class="btn btn-ghost">Toutes les zones <Icon name="arrowRight" size={17} /></a>
+      </div>
+      <div class="flex flex-wrap gap-2.5">
+        {business.areaServed.map((z) => (
+          <span class="inline-flex items-center gap-1.5 bg-white border border-[var(--color-line)] rounded-[var(--radius-pill)] px-4 py-2 text-sm">
+            <Icon name="mapPin" size={15} class="text-[var(--color-copper)]" /> {z}
+          </span>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <Faq lang={lang} items={faq} title="Questions fréquentes sur nos services de tapisserie" />
+
+  <!-- CTA FINAL -->
+  <section class="container-x pb-20">
+    <div class="rounded-[var(--radius-card)] bg-[var(--color-copper)] text-white p-10 md:p-14 text-center">
+      <h2 class="text-white text-3xl md:text-4xl mb-3">Un meuble à rénover ou à créer&nbsp;?</h2>
+      <p class="text-white/85 max-w-xl mx-auto mb-7">Envoyez-nous quelques photos sur WhatsApp ou appelez-nous. Devis gratuit et déplacement à domicile dans tout le Grand Casablanca.</p>
+      <div class="flex flex-wrap justify-center gap-3">
+        <a href={`https://wa.me/${business.whatsapp}`} class="btn bg-white text-[var(--color-ink)] hover:bg-white/90"><Icon name="whatsapp" size={18} /> WhatsApp</a>
+        <a href={`tel:${business.phone}`} class="btn btn-dark"><Icon name="phone" size={17} /> {business.phoneDisplay}</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

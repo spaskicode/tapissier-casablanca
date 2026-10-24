@@ -1,0 +1,57 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import Placeholder from '@/components/Placeholder.astro';
+import Icon from '@/components/Icon.astro';
+import { breadcrumbSchema } from '@/lib/schema';
+import { localizedPath as lp } from '@/i18n/ui';
+
+const lang = 'ar' as const;
+const items = (await getCollection('realisations'))
+  .filter((r) => r.data.lang === lang)
+  .sort((a, b) => a.data.order - b.data.order);
+const crumbs = [{ name: 'الرئيسية', url: '/ar' }, { name: 'أعمالنا', url: '/ar/realisations' }];
+---
+<BaseLayout
+  lang={lang}
+  path="/realisations"
+  title="أعمالنا — قبل / بعد | منجد الدار البيضاء"
+  description="نماذج من أعمال منجد الدار البيضاء: تنجيد الصالونات المغربية والكنب والفوتاي ورؤوس الأسرّة بالدار البيضاء. قبل / بعد."
+  schemas={[breadcrumbSchema(crumbs)]}
+>
+  <Breadcrumbs crumbs={crumbs} />
+  <section class="container-x pt-8 pb-10">
+    <p class="eyebrow mb-3">أعمالنا</p>
+    <h1 class="text-4xl md:text-5xl mb-4 max-w-2xl">أشغالنا قبل / بعد</h1>
+    <p class="text-[var(--color-muted)] max-w-xl mb-3">نماذج من قطع أثاث تم ترميمها وتفصيلها في ورشتنا.</p>
+    <p class="text-sm text-[var(--color-muted)]"><Icon name="sparkle" size={15} class="inline text-[var(--color-copper)]" /> [À COMPLÉTER : استبدل الأماكن المخصّصة بصور أعمالك الحقيقية.]</p>
+  </section>
+
+  <section class="container-x pb-14">
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {items.map((r) => (
+        <article class="card overflow-hidden">
+          <div class="grid grid-cols-2 gap-px bg-[var(--color-line)]">
+            <div class="relative"><Placeholder alt={r.data.avantAlt} ratio="1/1" rounded={false} icon="sofa" label="قبل" /></div>
+            <div class="relative"><Placeholder alt={r.data.apresAlt} ratio="1/1" rounded={false} icon="sparkle" label="بعد" /></div>
+          </div>
+          <div class="p-5">
+            <h2 class="text-lg">{r.data.title}</h2>
+            <p class="text-sm text-[var(--color-muted)] mt-1">
+              {r.data.type}{r.data.quartier ? ` · ${r.data.quartier}` : ''}{r.data.tissu ? ` · ${r.data.tissu}` : ''}
+            </p>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="container-x pb-20">
+    <div class="rounded-[var(--radius-card)] bg-[var(--color-cream)] p-8 text-center">
+      <h2 class="text-2xl mb-2">تريد النتيجة نفسها في بيتك؟</h2>
+      <p class="text-[var(--color-muted)] mb-5">أرسل لنا صورة لأثاثك وسنخبرك بما يمكننا إنجازه.</p>
+      <a href={lp(lang,'/devis-gratuit')} class="btn btn-primary">اطلب عرض سعر <Icon name="arrowRight" size={18} /></a>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,23 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Icon from '@/components/Icon.astro';
+import { localizedPath as lp } from '@/i18n/ui';
+const lang = 'fr' as const;
+---
+<BaseLayout
+  lang={lang}
+  path="/404"
+  title="Page introuvable — Tapissier Casablanca"
+  description="Cette page n'existe pas."
+  noindex={true}
+>
+  <section class="container-x py-24 text-center">
+    <p class="font-display font-extrabold text-7xl text-[var(--color-copper-soft)]">404</p>
+    <h1 class="text-3xl md:text-4xl mt-2 mb-4">Cette page n'existe pas</h1>
+    <p class="text-[var(--color-muted)] max-w-md mx-auto mb-8">Le lien est peut-être erroné ou la page a été déplacée. Revenez à l'accueil ou consultez nos services.</p>
+    <div class="flex flex-wrap justify-center gap-3">
+      <a href={lp(lang,'/')} class="btn btn-primary">Accueil <Icon name="arrowRight" size={18} /></a>
+      <a href={lp(lang,'/services')} class="btn btn-ghost">Nos services</a>
+    </div>
+  </section>
+</BaseLayout>

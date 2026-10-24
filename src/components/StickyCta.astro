@@ -1,0 +1,17 @@
+---
+import { business } from '@/data/business';
+import { t, type Lang } from '@/i18n/ui';
+import Icon from './Icon.astro';
+interface Props { lang: Lang; }
+const { lang } = Astro.props;
+---
+<!-- Barre d'action mobile : appel + WhatsApp (toujours accessible) -->
+<div class="fixed bottom-0 inset-x-0 z-40 lg:hidden grid grid-cols-2 gap-px bg-[var(--color-line)] shadow-[0_-8px_24px_-16px_rgba(0,0,0,.4)]">
+  <a href={`tel:${business.phone}`} class="flex items-center justify-center gap-2 py-3.5 bg-[var(--color-ink)] text-white font-display font-semibold text-sm">
+    <Icon name="phone" size={18} /> {t(lang,'cta.call')}
+  </a>
+  <a href={`https://wa.me/${business.whatsapp}`} class="flex items-center justify-center gap-2 py-3.5 bg-[#25d366] text-white font-display font-semibold text-sm">
+    <Icon name="whatsapp" size={18} /> {t(lang,'cta.whatsapp')}
+  </a>
+</div>
+<div class="h-[52px] lg:hidden" aria-hidden="true"></div>

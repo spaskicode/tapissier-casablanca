@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 48" role="img" aria-label="Tapissier Casablanca">
+  <g transform="translate(4,8)" fill="none" stroke="#17191c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 18V13a3 3 0 0 1 3-3h14a3 3 0 0 1 3 3v5"/>
+    <path d="M2 19a2 2 0 0 1 4 0v3h16v-3a2 2 0 0 1 4 0v5H2z"/>
+    <path d="M6 24v3M22 24v3"/>
+  </g>
+  <text x="44" y="23" font-family="Exo, sans-serif" font-size="18" font-weight="800" fill="#17191c">Tapissier</text>
+  <text x="44" y="40" font-family="Exo, sans-serif" font-size="18" font-weight="800" fill="#c4662f">Casablanca</text>
+</svg>

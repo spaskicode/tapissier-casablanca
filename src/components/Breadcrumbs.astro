@@ -1,0 +1,18 @@
+---
+import Icon from './Icon.astro';
+interface Crumb { name: string; url: string; }
+interface Props { crumbs: Crumb[]; }
+const { crumbs } = Astro.props;
+---
+<nav aria-label="Fil d'Ariane" class="container-x pt-6">
+  <ol class="flex flex-wrap items-center gap-1.5 text-sm text-[var(--color-muted)]">
+    {crumbs.map((c, i) => (
+      <li class="flex items-center gap-1.5">
+        {i > 0 && <Icon name="arrowRight" size={13} class="opacity-50" />}
+        {i < crumbs.length - 1
+          ? <a href={c.url} class="hover:text-[var(--color-copper)] transition">{c.name}</a>
+          : <span class="text-[var(--color-ink)] font-medium" aria-current="page">{c.name}</span>}
+      </li>
+    ))}
+  </ol>
+</nav>

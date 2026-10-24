@@ -1,0 +1,90 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import Faq from '@/components/Faq.astro';
+import Icon from '@/components/Icon.astro';
+import { faqSchema, breadcrumbSchema } from '@/lib/schema';
+import { business } from '@/data/business';
+import { localizedPath as lp } from '@/i18n/ui';
+
+const lang = 'fr' as const;
+const crumbs = [{ name: 'Accueil', url: '/' }, { name: 'Tarifs', url: '/tarifs' }];
+
+const grille = [
+  { s: 'Réfection de salon marocain', u: 'au mètre linéaire', p: '[À COMPLÉTER] MAD' },
+  { s: 'Réfection de canapé', u: 'par pièce', p: '[À COMPLÉTER] MAD' },
+  { s: 'Retapissage de fauteuil', u: 'par pièce', p: '[À COMPLÉTER] MAD' },
+  { s: 'Tête de lit sur mesure', u: 'selon largeur', p: '[À COMPLÉTER] MAD' },
+  { s: 'Retapissage de chaise', u: 'par chaise', p: '[À COMPLÉTER] MAD' },
+  { s: 'Tapisserie automobile (ciel de toit)', u: 'par véhicule', p: '[À COMPLÉTER] MAD' },
+  { s: 'Mousse haute densité', u: 'selon dimensions', p: '[À COMPLÉTER] MAD' },
+  { s: 'Rideaux sur mesure', u: 'par fenêtre', p: '[À COMPLÉTER] MAD' },
+];
+
+const faq = [
+  { question: "Comment sont calculés vos tarifs de tapisserie ?", answer: "Nos prix dépendent de trois facteurs : la quantité (mètre linéaire d'un salon, nombre de pièces), le tissu choisi et la densité de mousse. L'état de la structure peut aussi jouer. C'est pourquoi nous établissons un devis précis après une prise de mesures gratuite à domicile." },
+  { question: "La réfection est-elle moins chère que l'achat neuf ?", answer: "Dans la plupart des cas, oui — surtout pour un meuble de qualité dont la structure est saine. Vous gardez le cadre, vous ne payez que la mousse, la garniture et le tissu, et vous choisissez une matière plus résistante qu'à l'origine." },
+  { question: "Le devis est-il payant ?", answer: "Non. Le devis et la prise de mesures à domicile sont gratuits et sans engagement, dans tout le Grand Casablanca." },
+  { question: "Proposez-vous des prix dégressifs par lot ?", answer: "Oui, pour un lot de chaises identiques ou plusieurs pièces, le prix unitaire est généralement dégressif. Précisez la quantité lors de votre demande de devis." },
+];
+---
+<BaseLayout
+  lang={lang}
+  path="/tarifs"
+  title="Tarifs tapissier à Casablanca : prix réfection salon, canapé, fauteuil"
+  description="Comment sont calculés les prix de tapisserie à Casablanca : réfection de salon marocain, canapé, fauteuil, tête de lit. Fourchettes et devis gratuit à domicile."
+  schemas={[faqSchema(faq), breadcrumbSchema(crumbs)]}
+>
+  <Breadcrumbs crumbs={crumbs} />
+  <section class="container-x pt-8 pb-10">
+    <p class="eyebrow mb-3">Tarifs</p>
+    <h1 class="text-4xl md:text-5xl mb-5 max-w-2xl">Prix d'un tapissier à Casablanca</h1>
+    <div class="answer-box max-w-2xl">
+      Le prix d'une réfection dépend de la <strong>quantité</strong> (mètre linéaire ou nombre de pièces),
+      du <strong>tissu</strong> choisi et de la <strong>densité de mousse</strong>. Plutôt que d'annoncer un
+      tarif au hasard, nous prenons les mesures chez vous et remettons un devis clair et gratuit.
+    </div>
+  </section>
+
+  <section class="container-x pb-6">
+    <div class="card overflow-hidden">
+      <table class="w-full border-collapse">
+        <thead>
+          <tr class="bg-[var(--color-cream)] text-left">
+            <th class="p-4 font-display">Prestation</th>
+            <th class="p-4 font-display hidden sm:table-cell">Unité</th>
+            <th class="p-4 font-display">Fourchette</th>
+          </tr>
+        </thead>
+        <tbody>
+          {grille.map((r) => (
+            <tr class="border-t border-[var(--color-line)]">
+              <td class="p-4">{r.s}</td>
+              <td class="p-4 text-[var(--color-muted)] hidden sm:table-cell">{r.u}</td>
+              <td class="p-4 font-medium">{r.p}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <p class="text-sm text-[var(--color-muted)] mt-3">
+      <Icon name="shield" size={15} class="inline text-[var(--color-copper)]" />
+      Fourchettes à compléter avec vos tarifs réels. Chaque projet reçoit un devis précis après mesures.
+    </p>
+  </section>
+
+  <section class="container-x py-8">
+    <div class="rounded-[var(--radius-card)] bg-[var(--color-ink)] text-white p-8 md:p-10 flex flex-col md:flex-row items-center justify-between gap-5">
+      <div>
+        <h2 class="text-white text-2xl md:text-3xl mb-1">Un prix précis pour votre meuble ?</h2>
+        <p class="text-white/70">Devis gratuit et sans engagement, à domicile dans le Grand Casablanca.</p>
+      </div>
+      <div class="flex gap-3 shrink-0">
+        <a href={lp(lang,'/devis-gratuit')} class="btn btn-primary">Devis gratuit</a>
+        <a href={`https://wa.me/${business.whatsapp}`} class="btn btn-wa"><Icon name="whatsapp" size={18} /> WhatsApp</a>
+      </div>
+    </div>
+  </section>
+
+  <Faq lang={lang} items={faq} title="Questions fréquentes sur les tarifs" />
+</BaseLayout>

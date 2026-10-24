@@ -1,0 +1,68 @@
+---
+import { business } from '@/data/business';
+import { t, localizedPath, type Lang } from '@/i18n/ui';
+import Icon from './Icon.astro';
+
+interface Props { lang: Lang; services?: { slug: string; title: string }[]; zones?: { slug: string; title: string }[]; }
+const { lang, services = [], zones = [] } = Astro.props;
+const p = (path: string) => localizedPath(lang, path);
+const year = new Date().getFullYear();
+---
+<footer class="bg-[var(--color-ink)] text-white/80 mt-24">
+  <div class="container-x py-16 grid gap-10 md:grid-cols-2 lg:grid-cols-4">
+    <div>
+      <div class="flex items-center gap-2.5 mb-4">
+        <span class="grid place-items-center w-9 h-9 rounded-md bg-[var(--color-copper)] text-white"><Icon name="sofa" size={20} stroke={2} /></span>
+        <span class="font-display font-extrabold text-white text-[1.05rem]">Tapissier Casablanca</span>
+      </div>
+      <p class="text-sm leading-relaxed text-white/60">
+        {lang === 'ar'
+          ? 'منجد ومزخرف محترف بالدار البيضاء: ترميم وتفصيل الصالونات المغربية والكنب والفوتاي ورؤوس الأسرّة.'
+          : "Artisan tapissier-décorateur à Casablanca. Réfection et sur-mesure : salons marocains, canapés, fauteuils, têtes de lit et sièges auto."}
+      </p>
+      <div class="flex gap-3 mt-5">
+        <a href={`tel:${business.phone}`} class="grid place-items-center w-9 h-9 rounded-md bg-white/10 hover:bg-[var(--color-copper)] transition" aria-label={t(lang,'cta.call')}><Icon name="phone" size={17} /></a>
+        <a href={`https://wa.me/${business.whatsapp}`} class="grid place-items-center w-9 h-9 rounded-md bg-white/10 hover:bg-[#25d366] transition" aria-label="WhatsApp"><Icon name="whatsapp" size={17} /></a>
+        <a href={p('/contact')} class="grid place-items-center w-9 h-9 rounded-md bg-white/10 hover:bg-[var(--color-copper)] transition" aria-label="Contact"><Icon name="mapPin" size={17} /></a>
+      </div>
+    </div>
+
+    <nav aria-label={t(lang,'footer.services')}>
+      <h3 class="text-white font-display font-bold mb-4 text-sm uppercase tracking-wider">{t(lang,'footer.services')}</h3>
+      <ul class="space-y-2.5 text-sm">
+        {services.slice(0, 8).map((s) => (
+          <li><a href={p(`/services/${s.slug}`)} class="hover:text-[var(--color-copper)] transition">{s.title}</a></li>
+        ))}
+      </ul>
+    </nav>
+
+    <nav aria-label={t(lang,'footer.zones')}>
+      <h3 class="text-white font-display font-bold mb-4 text-sm uppercase tracking-wider">{t(lang,'footer.zones')}</h3>
+      <ul class="space-y-2.5 text-sm">
+        {zones.slice(0, 8).map((z) => (
+          <li><a href={p(`/zones/${z.slug}`)} class="hover:text-[var(--color-copper)] transition">{z.title}</a></li>
+        ))}
+      </ul>
+    </nav>
+
+    <div>
+      <h3 class="text-white font-display font-bold mb-4 text-sm uppercase tracking-wider">{t(lang,'footer.contact')}</h3>
+      <ul class="space-y-3 text-sm">
+        <li class="flex gap-2.5"><Icon name="phone" size={17} /><a href={`tel:${business.phone}`} class="hover:text-[var(--color-copper)]">{business.phoneDisplay}</a></li>
+        <li class="flex gap-2.5"><Icon name="mapPin" size={17} /><span>{business.address.locality}, {business.address.region}</span></li>
+        <li class="flex gap-2.5"><Icon name="clock" size={17} /><span>{lang==='ar'?business.openingHoursHuman_ar:business.openingHoursHuman}</span></li>
+      </ul>
+      <a href={p('/devis-gratuit')} class="btn btn-primary mt-5 w-full">{t(lang,'cta.devis')}</a>
+    </div>
+  </div>
+
+  <div class="border-t border-white/10">
+    <div class="container-x py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-white/50">
+      <p>© {year} Tapissier Casablanca. {t(lang,'footer.rights')}</p>
+      <div class="flex gap-5">
+        <a href={p('/mentions-legales')} class="hover:text-white/80">{t(lang,'footer.legal')}</a>
+        <a href={p('/contact')} class="hover:text-white/80">{t(lang,'nav.contact')}</a>
+      </div>
+    </div>
+  </div>
+</footer>

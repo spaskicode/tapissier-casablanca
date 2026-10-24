@@ -1,0 +1,65 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import DevisForm from '@/components/DevisForm.astro';
+import Icon from '@/components/Icon.astro';
+import { breadcrumbSchema } from '@/lib/schema';
+import { business } from '@/data/business';
+
+const lang = 'fr' as const;
+const crumbs = [{ name: 'Accueil', url: '/' }, { name: 'Contact', url: '/contact' }];
+const contactSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ContactPage',
+  name: 'Contact — Tapissier Casablanca',
+  url: `${business.domain}/contact`,
+};
+---
+<BaseLayout
+  lang={lang}
+  path="/contact"
+  title="Contact — Tapissier Casablanca | Devis gratuit à domicile"
+  description="Contactez Tapissier Casablanca pour un devis gratuit : téléphone, WhatsApp et formulaire. Déplacement à domicile dans tout le Grand Casablanca."
+  schemas={[contactSchema, breadcrumbSchema(crumbs)]}
+>
+  <Breadcrumbs crumbs={crumbs} />
+  <section class="container-x pt-8 pb-16 grid lg:grid-cols-2 gap-10">
+    <div>
+      <p class="eyebrow mb-3">Contact</p>
+      <h1 class="text-4xl md:text-5xl mb-5">Parlons de votre projet</h1>
+      <p class="text-[var(--color-muted)] mb-8 max-w-md">Appelez-nous, écrivez sur WhatsApp ou remplissez le formulaire. Le devis et la prise de mesures à domicile sont gratuits.</p>
+
+      <ul class="space-y-4">
+        <li class="flex items-start gap-3">
+          <span class="grid place-items-center w-11 h-11 rounded-lg bg-[var(--color-copper-soft)] text-[var(--color-copper)]"><Icon name="phone" size={20} /></span>
+          <div><p class="text-sm text-[var(--color-muted)]">Téléphone</p><a href={`tel:${business.phone}`} class="font-display font-semibold text-lg hover:text-[var(--color-copper)]">{business.phoneDisplay}</a></div>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="grid place-items-center w-11 h-11 rounded-lg bg-[#e6f8ee] text-[#25d366]"><Icon name="whatsapp" size={20} /></span>
+          <div><p class="text-sm text-[var(--color-muted)]">WhatsApp</p><a href={`https://wa.me/${business.whatsapp}`} class="font-display font-semibold text-lg hover:text-[var(--color-copper)]">{business.phoneDisplay}</a></div>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="grid place-items-center w-11 h-11 rounded-lg bg-[var(--color-cream)] text-[var(--color-copper)]"><Icon name="mapPin" size={20} /></span>
+          <div><p class="text-sm text-[var(--color-muted)]">Zone</p><p class="font-display font-semibold">Casablanca & Grand Casablanca</p></div>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="grid place-items-center w-11 h-11 rounded-lg bg-[var(--color-cream)] text-[var(--color-copper)]"><Icon name="clock" size={20} /></span>
+          <div><p class="text-sm text-[var(--color-muted)]">Horaires</p><p class="font-display font-semibold">{business.openingHoursHuman}</p></div>
+        </li>
+      </ul>
+
+      <!-- Emplacement carte Google (à remplacer par l'iframe de votre fiche GBP) -->
+      <div class="mt-8 rounded-[var(--radius-card)] overflow-hidden border border-[var(--color-line)] bg-[var(--color-cream)] aspect-[16/9] grid place-items-center text-[var(--color-muted)]">
+        <div class="text-center px-4">
+          <Icon name="mapPin" size={32} class="mx-auto mb-2" />
+          <p class="text-sm">[À COMPLÉTER : intégrer l'iframe de votre fiche Google Business Profile]</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card p-6 md:p-8 h-max">
+      <h2 class="text-2xl mb-5">Demande de devis</h2>
+      <DevisForm />
+    </div>
+  </section>
+</BaseLayout>

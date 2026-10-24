@@ -1,0 +1,28 @@
+{
+  "name": "tapissier-casablanca",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Site vitrine + SEO local pour Tapissier Casablanca (Astro, FR/AR)",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "astro": "^5.6.0",
+    "@astrojs/sitemap": "^3.3.0",
+    "@fontsource/exo": "^5.1.0",
+    "@fontsource/roboto": "^5.1.0",
+    "sharp": "^0.33.5"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@tailwindcss/vite": "^4.1.0",
+    "tailwindcss": "^4.1.0",
+    "typescript": "^5.6.0"
+  }
+}

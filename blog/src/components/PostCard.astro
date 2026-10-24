@@ -1,0 +1,17 @@
+---
+import Placeholder from './Placeholder.astro';
+import Icon from './Icon.astro';
+interface Props { slug: string; title: string; excerpt: string; cover?: string; coverAlt: string; tags?: string[]; }
+const { slug, title, excerpt, cover = 'sofa', coverAlt, tags = [] } = Astro.props;
+---
+<article class="card overflow-hidden group flex flex-col">
+  <a href={`/${slug}`} aria-label={title}>
+    <Placeholder alt={coverAlt} ratio="16/9" icon={cover} rounded={false} />
+  </a>
+  <div class="p-5 flex flex-col flex-1">
+    {tags.length > 0 && <p class="text-xs uppercase tracking-wider text-[var(--color-copper)] font-display font-semibold mb-2">{tags[0]}</p>}
+    <h2 class="text-lg leading-snug mb-2"><a href={`/${slug}`} class="hover:text-[var(--color-copper)] transition">{title}</a></h2>
+    <p class="text-sm text-[var(--color-muted)] flex-1">{excerpt}</p>
+    <a href={`/${slug}`} class="mt-4 inline-flex items-center gap-2 text-[var(--color-copper)] font-display font-semibold text-sm">Lire l'article <Icon name="arrowRight" size={16} class="group-hover:translate-x-1 transition-transform" /></a>
+  </div>
+</article>

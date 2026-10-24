@@ -1,0 +1,23 @@
+---
+import { business } from '@/data/business';
+import Icon from './Icon.astro';
+const MAIN = business.domain;
+---
+<header class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-[var(--color-line)]">
+  <div class="container-x flex items-center justify-between h-[68px] gap-4">
+    <a href="/" class="flex items-center gap-2.5 shrink-0" aria-label="Blog Tapissier Casablanca">
+      <span class="grid place-items-center w-9 h-9 rounded-md bg-[var(--color-ink)] text-white"><Icon name="sofa" size={20} stroke={2} /></span>
+      <span class="font-display font-extrabold leading-none text-[1.02rem]">Tapissier<span class="text-[var(--color-copper)]"> Casablanca</span> <span class="text-[var(--color-muted)] font-semibold text-sm">· Blog</span></span>
+    </a>
+    <nav class="hidden md:flex items-center gap-7" aria-label="Navigation">
+      <a href="/" class="text-[0.95rem] font-medium hover:text-[var(--color-copper)]">Articles</a>
+      <a href={`${MAIN}/services`} class="text-[0.95rem] font-medium hover:text-[var(--color-copper)]">Services</a>
+      <a href={`${MAIN}/tarifs`} class="text-[0.95rem] font-medium hover:text-[var(--color-copper)]">Tarifs</a>
+      <a href={`${MAIN}/realisations`} class="text-[0.95rem] font-medium hover:text-[var(--color-copper)]">Réalisations</a>
+    </nav>
+    <div class="flex items-center gap-3">
+      <a href={`tel:${business.phone}`} class="hidden sm:inline-flex btn btn-ghost !py-2.5 !px-4"><Icon name="phone" size={17} /> <span class="hidden lg:inline">{business.phoneDisplay}</span></a>
+      <a href={`${MAIN}/devis-gratuit`} class="btn btn-primary !py-2.5 !px-5">Devis gratuit</a>
+    </div>
+  </div>
+</header>

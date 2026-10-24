@@ -1,0 +1,103 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import Faq from '@/components/Faq.astro';
+import ServiceCard from '@/components/ServiceCard.astro';
+import Placeholder from '@/components/Placeholder.astro';
+import Icon from '@/components/Icon.astro';
+import { faqSchema, breadcrumbSchema } from '@/lib/schema';
+import { business } from '@/data/business';
+import { localizedPath as lp } from '@/i18n/ui';
+
+export async function getStaticPaths() {
+  const all = await getCollection('zones');
+  return all
+    .filter((z) => z.data.lang === 'ar')
+    .map((entry) => ({ params: { slug: entry.data.slug }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const d = entry.data;
+const lang = 'ar' as const;
+const { Content } = await render(entry);
+
+const services = await getCollection('services');
+const phares = services
+  .filter((s) => s.data.lang === 'ar' && d.servicesPhares.includes(s.data.slug))
+  .map((s) => ({ slug: s.data.slug, title: s.data.title, excerpt: s.data.metaDescription, icon: s.data.icon }));
+
+const crumbs = [
+  { name: 'الرئيسية', url: '/ar' },
+  { name: 'المناطق', url: '/ar/zones' },
+  { name: d.quartier, url: `/ar/zones/${d.slug}` },
+];
+
+const dateAr = new Intl.DateTimeFormat('ar-MA', {
+  day: 'numeric', month: 'long', year: 'numeric',
+}).format(d.updated);
+const isoUpdated = d.updated.toISOString().slice(0, 10);
+---
+<BaseLayout
+  lang={lang}
+  path={`/zones/${d.slug}`}
+  title={d.metaTitle}
+  description={d.metaDescription}
+  schemas={[faqSchema(d.faq), breadcrumbSchema(crumbs)]}
+>
+  <Breadcrumbs crumbs={crumbs} />
+  <section class="container-x pt-8 pb-12 grid lg:grid-cols-2 gap-10 items-center">
+    <div>
+      <p class="eyebrow mb-3"><Icon name="mapPin" size={16} /> {d.quartier}، الدار البيضاء</p>
+      <h1 class="text-4xl md:text-5xl mb-5">{d.title}</h1>
+      <div class="answer-box mb-4">{d.answer}</div>
+      <p class="text-sm text-[var(--color-muted)] mb-6">
+        آخر تحديث: <time datetime={isoUpdated}>{dateAr}</time> · تنقّل مجاني إلى {d.quartier}
+      </p>
+      <div class="flex flex-wrap gap-3">
+        <a href={lp(lang,'/devis-gratuit')} class="btn btn-primary">عرض سعر مجاني <Icon name="arrowRight" size={18} /></a>
+        <a href={`https://wa.me/${business.whatsapp}`} class="btn btn-wa"><Icon name="whatsapp" size={18} /> واتساب</a>
+      </div>
+    </div>
+    <Placeholder alt={d.heroAlt} ratio="4/3" icon="mapPin" label={`منجد في ${d.quartier}`} />
+  </section>
+
+  <section class="container-x py-8">
+    <article class="prose-local max-w-3xl
+      [&_h2]:text-2xl [&_h2]:md:text-3xl [&_h2]:mt-8 [&_h2]:mb-3
+      [&_p]:mb-4 [&_p]:text-[var(--color-ink-2)]
+      [&_ul]:my-4 [&_ul]:pr-5 [&_ul]:list-disc [&_li]:mb-2">
+      <Content />
+    </article>
+  </section>
+
+  {d.landmarks.length > 0 && (
+    <section class="container-x py-4">
+      <div class="card p-6 max-w-3xl">
+        <h2 class="text-xl mb-1">أين نتدخل بالضبط في {d.quartier}؟</h2>
+        <p class="text-sm text-[var(--color-muted)] mb-4">نتنقل في كل القطاع، خاصة حول:</p>
+        <ul class="flex flex-wrap gap-2">
+          {d.landmarks.map((l) => (
+            <li class="text-sm rounded-full bg-[var(--color-cream)] px-3.5 py-1.5 inline-flex items-center gap-1.5">
+              <span class="text-[var(--color-copper)]"><Icon name="mapPin" size={14} /></span>{l}
+            </li>
+          ))}
+        </ul>
+        <p class="text-sm text-[var(--color-muted)] mt-4">
+          نوع السكن: {d.habitat}. أخذ المقاسات في المنزل، النقل والتسليم مشمولان.
+        </p>
+      </div>
+    </section>
+  )}
+
+  {phares.length > 0 && (
+    <section class="container-x py-8">
+      <h2 class="text-2xl md:text-3xl mb-6">ما هي خدماتنا في {d.quartier}؟</h2>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        {phares.map((p) => <ServiceCard lang={lang} slug={p.slug} title={p.title} excerpt={p.excerpt} icon={p.icon} />)}
+      </div>
+    </section>
+  )}
+
+  <Faq lang={lang} items={d.faq} title={`منجد في ${d.quartier} — أسئلة شائعة`} />
+</BaseLayout>

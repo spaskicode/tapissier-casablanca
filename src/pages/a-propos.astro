@@ -1,0 +1,55 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import Placeholder from '@/components/Placeholder.astro';
+import Icon from '@/components/Icon.astro';
+import { breadcrumbSchema } from '@/lib/schema';
+import { business } from '@/data/business';
+import { localizedPath as lp } from '@/i18n/ui';
+
+const lang = 'fr' as const;
+const crumbs = [{ name: 'Accueil', url: '/' }, { name: 'À propos', url: '/a-propos' }];
+const aboutSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'AboutPage',
+  name: 'À propos — Tapissier Casablanca',
+  url: `${business.domain}/a-propos`,
+};
+const values = [
+  { icon: 'shield', t: 'Honnêteté', d: "On ne vous fait pas payer du neuf quand une réfection suffit." },
+  { icon: 'sparkle', t: 'Finitions soignées', d: "Coutures nettes, tissus tendus, détails maîtrisés." },
+  { icon: 'mapPin', t: 'Proximité', d: "Un artisan qui se déplace chez vous dans le Grand Casablanca." },
+];
+---
+<BaseLayout
+  lang={lang}
+  path="/a-propos"
+  title="À propos — Artisan tapissier à Casablanca | Tapissier Casablanca"
+  description="Tapissier Casablanca, artisan tapissier-décorateur : réfection et sur-mesure de salons marocains, canapés et têtes de lit. Savoir-faire, proximité et finitions soignées."
+  schemas={[aboutSchema, breadcrumbSchema(crumbs)]}
+>
+  <Breadcrumbs crumbs={crumbs} />
+  <section class="container-x pt-8 pb-14 grid lg:grid-cols-2 gap-10 items-center">
+    <div>
+      <p class="eyebrow mb-3">À propos</p>
+      <h1 class="text-4xl md:text-5xl mb-5">Un artisan tapissier au service de Casablanca</h1>
+      <p class="text-[var(--color-ink-2)] mb-4">Tapissier Casablanca est un atelier de tapisserie d'ameublement basé à Casablanca. Notre métier : redonner vie à vos meubles et créer des pièces sur mesure — salons marocains, canapés, fauteuils, têtes de lit et sellerie auto.</p>
+      <p class="text-[var(--color-muted)] mb-4">Depuis [À COMPLÉTER : année de création], nous travaillons pour les familles, les riads et les professionnels du Grand Casablanca. Notre approche est simple : un conseil honnête, un travail soigné, et un meuble qui dure.</p>
+      <p class="text-[var(--color-muted)]">[À COMPLÉTER : quelques lignes sur le fondateur / l'atelier / le nombre d'années d'expérience, à renseigner avec vos informations réelles.]</p>
+      <a href={lp(lang,'/devis-gratuit')} class="btn btn-primary mt-7">Demander un devis <Icon name="arrowRight" size={18} /></a>
+    </div>
+    <Placeholder alt="Artisan tapissier au travail dans son atelier à Casablanca" ratio="4/3" icon="scissors" label="Notre atelier" />
+  </section>
+
+  <section class="container-x py-10">
+    <div class="grid sm:grid-cols-3 gap-5">
+      {values.map((v) => (
+        <div class="card p-6">
+          <span class="grid place-items-center w-12 h-12 rounded-lg bg-[var(--color-copper-soft)] text-[var(--color-copper)] mb-4"><Icon name={v.icon} size={24} /></span>
+          <h2 class="text-xl mb-1.5">{v.t}</h2>
+          <p class="text-[var(--color-muted)] text-[0.95rem]">{v.d}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

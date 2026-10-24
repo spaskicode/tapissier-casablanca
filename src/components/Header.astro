@@ -1,0 +1,95 @@
+---
+import { business } from '@/data/business';
+import { t, localizedPath, type Lang } from '@/i18n/ui';
+import Icon from './Icon.astro';
+
+interface Props { lang: Lang; }
+const { lang } = Astro.props;
+const p = (path: string) => localizedPath(lang, path);
+const current = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isActive = (path: string) => {
+  const target = p(path).replace(/\/$/, '') || '/';
+  return target === '/' ? current === '/' || current === '/ar' : current.startsWith(target);
+};
+
+// Lien de bascule de langue : même page, autre langue
+const other: Lang = lang === 'fr' ? 'ar' : 'fr';
+let altPath = current;
+if (lang === 'fr') altPath = current === '/' ? '/ar' : `/ar${current}`;
+else altPath = current.replace(/^\/ar/, '') || '/';
+
+const nav = [
+  { href: '/', label: t(lang, 'nav.home') },
+  { href: '/services', label: t(lang, 'nav.services') },
+  { href: '/zones', label: t(lang, 'nav.zones') },
+  { href: '/realisations', label: t(lang, 'nav.realisations') },
+  { href: '/tarifs', label: t(lang, 'nav.tarifs') },
+  { href: '/a-propos', label: t(lang, 'nav.about') },
+];
+---
+<header class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-[var(--color-line)]">
+  <div class="container-x flex items-center justify-between h-[72px] gap-4">
+    <!-- Logo -->
+    <a href={p('/')} class="flex items-center gap-2.5 shrink-0" aria-label={business.brand}>
+      <span class="grid place-items-center w-9 h-9 rounded-md bg-[var(--color-ink)] text-white">
+        <Icon name="sofa" size={20} stroke={2} />
+      </span>
+      <span class="font-display font-extrabold leading-none text-[1.05rem]">
+        Tapissier<span class="text-[var(--color-copper)]"> Casablanca</span>
+      </span>
+    </a>
+
+    <!-- Nav desktop -->
+    <nav class="hidden lg:flex items-center gap-7" aria-label="Navigation principale">
+      {nav.map((item) => (
+        <a
+          href={p(item.href)}
+          class={`text-[0.95rem] font-medium transition-colors hover:text-[var(--color-copper)] ${isActive(item.href) ? 'text-[var(--color-copper)]' : 'text-[var(--color-ink)]'}`}
+          aria-current={isActive(item.href) ? 'page' : undefined}
+        >{item.label}</a>
+      ))}
+      <a href={business.blogUrl} class="text-[0.95rem] font-medium text-[var(--color-ink)] hover:text-[var(--color-copper)]">{t(lang, 'nav.blog')}</a>
+    </nav>
+
+    <div class="flex items-center gap-3">
+      <!-- Langue -->
+      <a href={altPath} class="hidden sm:inline-flex text-sm font-medium text-[var(--color-muted)] hover:text-[var(--color-ink)]" hreflang={other} rel="alternate">
+        {other === 'ar' ? 'العربية' : 'FR'}
+      </a>
+      <a href={`tel:${business.phone}`} class="hidden md:inline-flex btn btn-ghost !py-2.5 !px-4" aria-label={t(lang, 'cta.callNow')}>
+        <Icon name="phone" size={17} /> <span class="hidden xl:inline">{business.phoneDisplay}</span>
+      </a>
+      <a href={p('/devis-gratuit')} class="hidden sm:inline-flex btn btn-primary !py-2.5 !px-5">{t(lang, 'cta.devis')}</a>
+
+      <!-- Burger mobile -->
+      <button id="menu-btn" class="lg:hidden grid place-items-center w-10 h-10 rounded-md border border-[var(--color-line)]" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu">
+        <Icon name="menu" size={22} />
+      </button>
+    </div>
+  </div>
+
+  <!-- Menu mobile -->
+  <div id="mobile-menu" hidden class="lg:hidden border-t border-[var(--color-line)] bg-white">
+    <nav class="container-x py-4 flex flex-col gap-1" aria-label="Navigation mobile">
+      {nav.map((item) => (
+        <a href={p(item.href)} class="py-2.5 font-medium border-b border-[var(--color-line)]">{item.label}</a>
+      ))}
+      <a href={business.blogUrl} class="py-2.5 font-medium border-b border-[var(--color-line)]">{t(lang, 'nav.blog')}</a>
+      <a href={altPath} class="py-2.5 font-medium" hreflang={other}>{other === 'ar' ? 'العربية' : 'Français'}</a>
+      <div class="flex gap-3 pt-3">
+        <a href={`tel:${business.phone}`} class="btn btn-ghost flex-1">{t(lang, 'cta.call')}</a>
+        <a href={p('/devis-gratuit')} class="btn btn-primary flex-1">{t(lang, 'cta.devis')}</a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const btn = document.getElementById('menu-btn');
+  const menu = document.getElementById('mobile-menu');
+  btn?.addEventListener('click', () => {
+    const open = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', String(!open));
+    if (menu) (menu as HTMLElement).hidden = open;
+  });
+</script>

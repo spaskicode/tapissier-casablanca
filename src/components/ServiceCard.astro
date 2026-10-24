@@ -1,0 +1,17 @@
+---
+import { localizedPath, type Lang } from '@/i18n/ui';
+import Icon from './Icon.astro';
+interface Props { lang: Lang; slug: string; title: string; excerpt: string; icon?: string; }
+const { lang, slug, title, excerpt, icon = 'sofa' } = Astro.props;
+const href = localizedPath(lang, `/services/${slug}`);
+---
+<a href={href} class="card p-6 flex flex-col group">
+  <span class="grid place-items-center w-12 h-12 rounded-lg bg-[var(--color-copper-soft)] text-[var(--color-copper)] mb-4 group-hover:bg-[var(--color-copper)] group-hover:text-white transition">
+    <Icon name={icon} size={24} />
+  </span>
+  <h3 class="text-xl mb-2">{title}</h3>
+  <p class="text-[var(--color-muted)] text-[0.95rem] leading-relaxed flex-1">{excerpt}</p>
+  <span class="mt-4 inline-flex items-center gap-2 text-[var(--color-copper)] font-display font-semibold text-sm">
+    {lang === 'ar' ? 'اكتشف' : 'Découvrir'} <Icon name="arrowRight" size={16} class="group-hover:translate-x-1 transition-transform" />
+  </span>
+</a>

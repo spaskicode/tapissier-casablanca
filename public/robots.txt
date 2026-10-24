@@ -1,0 +1,29 @@
+# Tapissier Casablanca — robots.txt
+# Moteurs de recherche classiques
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# Crawlers IA de récupération en direct (AEO/GEO) — autorisés
+User-agent: OAI-SearchBot
+Allow: /
+User-agent: ChatGPT-User
+Allow: /
+User-agent: Claude-SearchBot
+Allow: /
+User-agent: Claude-User
+Allow: /
+User-agent: PerplexityBot
+Allow: /
+User-agent: MistralAI-User
+Allow: /
+User-agent: xAI-Bot
+Allow: /
+
+# Par défaut : tout autorisé
+User-agent: *
+Allow: /
+
+Sitemap: https://tapissier-casablanca.ma/sitemap-index.xml

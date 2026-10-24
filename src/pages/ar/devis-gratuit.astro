@@ -1,0 +1,45 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import DevisForm from '@/components/DevisForm.astro';
+import Icon from '@/components/Icon.astro';
+import { breadcrumbSchema } from '@/lib/schema';
+
+const lang = 'ar' as const;
+const crumbs = [{ name: 'الرئيسية', url: '/ar' }, { name: 'عرض سعر مجاني', url: '/ar/devis-gratuit' }];
+const points = [
+  'التنقل وأخذ المقاسات في المنزل',
+  'عرض سعر واضح ومفصّل دون التزام',
+  'نصيحة صادقة: نخبرك بما يستحق التجديد',
+  'رد سريع عبر الهاتف أو واتساب',
+];
+---
+<BaseLayout
+  lang={lang}
+  path="/devis-gratuit"
+  title="عرض سعر مجاني — منجد بالدار البيضاء | منجد الدار البيضاء"
+  description="اطلب عرض سعر مجاني لترميم أو تفصيل أثاثك بالدار البيضاء. أخذ المقاسات في المنزل ورد سريع."
+  schemas={[breadcrumbSchema(crumbs)]}
+>
+  <Breadcrumbs crumbs={crumbs} />
+  <section class="container-x pt-8 pb-16 grid lg:grid-cols-2 gap-10 items-start">
+    <div>
+      <p class="eyebrow mb-3">عرض سعر مجاني</p>
+      <h1 class="text-4xl md:text-5xl mb-5">استلم عرض سعرك في بضع ساعات</h1>
+      <p class="text-[var(--color-muted)] mb-8 max-w-md">صف لنا مشروعك، أو أرسل بعض الصور عبر واتساب. نرد عليك بسرعة بتقدير أولي، ثم نؤكده بعد أخذ المقاسات.</p>
+      <ul class="space-y-3">
+        {points.map((p) => (
+          <li class="flex items-center gap-3"><Icon name="check" size={20} class="text-[var(--color-copper)] shrink-0" /><span>{p}</span></li>
+        ))}
+      </ul>
+      <div class="mt-8 card p-5 bg-[var(--color-cream)]">
+        <p class="font-display font-bold mb-1">نصيحة</p>
+        <p class="text-sm text-[var(--color-muted)]">أرفق ٢ أو ٣ صور لأثاثك (صورة عامة + الأجزاء البالية): هذا يتيح تقديراً أسرع وأدق.</p>
+      </div>
+    </div>
+    <div class="card p-6 md:p-8">
+      <h2 class="text-2xl mb-5">طلبك</h2>
+      <DevisForm lang={lang} />
+    </div>
+  </section>
+</BaseLayout>

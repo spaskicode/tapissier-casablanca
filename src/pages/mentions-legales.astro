@@ -1,0 +1,41 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import { business } from '@/data/business';
+const lang = 'fr' as const;
+const crumbs = [{ name: 'Accueil', url: '/' }, { name: 'Mentions légales', url: '/mentions-legales' }];
+---
+<BaseLayout
+  lang={lang}
+  path="/mentions-legales"
+  title="Mentions légales — Tapissier Casablanca"
+  description="Mentions légales du site tapissier-casablanca.ma."
+  noindex={true}
+>
+  <Breadcrumbs crumbs={crumbs} />
+  <section class="container-x pt-8 pb-16 max-w-3xl">
+    <h1 class="text-3xl md:text-4xl mb-8">Mentions légales</h1>
+    <div class="prose-local space-y-5 text-[var(--color-ink-2)]">
+      <div>
+        <h2 class="text-xl font-display font-bold mb-2">Éditeur du site</h2>
+        <p>{business.brand}<br/>Raison sociale : {business.legalName}<br/>Adresse : {business.address.street}, {business.address.locality}, {business.address.region}<br/>Téléphone : {business.phoneDisplay}<br/>E-mail : {business.email}</p>
+      </div>
+      <div>
+        <h2 class="text-xl font-display font-bold mb-2">Identifiants</h2>
+        <p>ICE : [À COMPLÉTER]<br/>RC : [À COMPLÉTER]<br/>IF : [À COMPLÉTER]</p>
+      </div>
+      <div>
+        <h2 class="text-xl font-display font-bold mb-2">Hébergement</h2>
+        <p>[À COMPLÉTER : nom et adresse de l'hébergeur]</p>
+      </div>
+      <div>
+        <h2 class="text-xl font-display font-bold mb-2">Propriété intellectuelle</h2>
+        <p>L'ensemble des contenus de ce site (textes, images, logo) est la propriété de {business.brand}, sauf mention contraire. Toute reproduction sans autorisation est interdite.</p>
+      </div>
+      <div>
+        <h2 class="text-xl font-display font-bold mb-2">Données personnelles</h2>
+        <p>Les informations transmises via le formulaire de contact sont utilisées uniquement pour répondre à votre demande de devis et ne sont ni vendues ni cédées à des tiers.</p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

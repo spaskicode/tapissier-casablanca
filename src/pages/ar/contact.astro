@@ -1,0 +1,64 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import DevisForm from '@/components/DevisForm.astro';
+import Icon from '@/components/Icon.astro';
+import { breadcrumbSchema } from '@/lib/schema';
+import { business } from '@/data/business';
+
+const lang = 'ar' as const;
+const crumbs = [{ name: 'الرئيسية', url: '/ar' }, { name: 'اتصل بنا', url: '/ar/contact' }];
+const contactSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ContactPage',
+  name: 'اتصل بنا — منجد الدار البيضاء',
+  url: `${business.domain}/ar/contact`,
+};
+---
+<BaseLayout
+  lang={lang}
+  path="/contact"
+  title="اتصل بنا — منجد الدار البيضاء | عرض سعر مجاني في المنزل"
+  description="تواصل مع منجد الدار البيضاء للحصول على عرض سعر مجاني: الهاتف، واتساب ونموذج الاتصال. زيارة منزلية في جميع أنحاء الدار البيضاء الكبرى."
+  schemas={[contactSchema, breadcrumbSchema(crumbs)]}
+>
+  <Breadcrumbs crumbs={crumbs} />
+  <section class="container-x pt-8 pb-16 grid lg:grid-cols-2 gap-10">
+    <div>
+      <p class="eyebrow mb-3">اتصل بنا</p>
+      <h1 class="text-4xl md:text-5xl mb-5">لنتحدث عن مشروعك</h1>
+      <p class="text-[var(--color-muted)] mb-8 max-w-md">اتصل بنا، راسلنا على واتساب، أو املأ النموذج. عرض السعر وأخذ المقاسات في المنزل مجانيان.</p>
+
+      <ul class="space-y-4">
+        <li class="flex items-start gap-3">
+          <span class="grid place-items-center w-11 h-11 rounded-lg bg-[var(--color-copper-soft)] text-[var(--color-copper)]"><Icon name="phone" size={20} /></span>
+          <div><p class="text-sm text-[var(--color-muted)]">الهاتف</p><a href={`tel:${business.phone}`} class="font-display font-semibold text-lg hover:text-[var(--color-copper)]" dir="ltr">{business.phoneDisplay}</a></div>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="grid place-items-center w-11 h-11 rounded-lg bg-[#e6f8ee] text-[#25d366]"><Icon name="whatsapp" size={20} /></span>
+          <div><p class="text-sm text-[var(--color-muted)]">واتساب</p><a href={`https://wa.me/${business.whatsapp}`} class="font-display font-semibold text-lg hover:text-[var(--color-copper)]" dir="ltr">{business.phoneDisplay}</a></div>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="grid place-items-center w-11 h-11 rounded-lg bg-[var(--color-cream)] text-[var(--color-copper)]"><Icon name="mapPin" size={20} /></span>
+          <div><p class="text-sm text-[var(--color-muted)]">المنطقة</p><p class="font-display font-semibold">الدار البيضاء والدار البيضاء الكبرى</p></div>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="grid place-items-center w-11 h-11 rounded-lg bg-[var(--color-cream)] text-[var(--color-copper)]"><Icon name="clock" size={20} /></span>
+          <div><p class="text-sm text-[var(--color-muted)]">أوقات العمل</p><p class="font-display font-semibold">{business.openingHoursHuman_ar}</p></div>
+        </li>
+      </ul>
+
+      <div class="mt-8 rounded-[var(--radius-card)] overflow-hidden border border-[var(--color-line)] bg-[var(--color-cream)] aspect-[16/9] grid place-items-center text-[var(--color-muted)]">
+        <div class="text-center px-4">
+          <Icon name="mapPin" size={32} class="mx-auto mb-2" />
+          <p class="text-sm">[À COMPLÉTER : أدرج خريطة Google Business Profile هنا]</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card p-6 md:p-8 h-max">
+      <h2 class="text-2xl mb-5">طلب عرض سعر</h2>
+      <DevisForm lang={lang} />
+    </div>
+  </section>
+</BaseLayout>

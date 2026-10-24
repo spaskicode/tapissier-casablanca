@@ -1,0 +1,12 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Icon from '@/components/Icon.astro';
+---
+<BaseLayout path="/404" title="Article introuvable — Blog Tapissier Casablanca" description="Cette page n'existe pas." noindex={true}>
+  <section class="container-x py-24 text-center">
+    <p class="font-display font-extrabold text-7xl text-[var(--color-copper-soft)]">404</p>
+    <h1 class="text-3xl md:text-4xl mt-2 mb-4">Article introuvable</h1>
+    <p class="text-[var(--color-muted)] max-w-md mx-auto mb-8">Cet article a peut-être été déplacé. Revenez à la liste des articles.</p>
+    <a href="/" class="btn btn-primary">Tous les articles <Icon name="arrowRight" size={18} /></a>
+  </section>
+</BaseLayout>

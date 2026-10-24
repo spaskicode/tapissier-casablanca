@@ -1,0 +1,62 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PostCard from '@/components/PostCard.astro';
+import Icon from '@/components/Icon.astro';
+import { business } from '@/data/business';
+
+const posts = (await getCollection('posts')).sort(
+  (a, b) => b.data.datePublished.getTime() - a.data.datePublished.getTime()
+);
+const featured = posts[0];
+const rest = posts.slice(1);
+---
+<BaseLayout
+  path="/"
+  title="Blog Tapissier Casablanca — guides, inspiration & conseils tapisserie"
+  description="Conseils d'un tapissier à Casablanca : salon marocain, réfection de canapé, têtes de lit, choix du tissu, mousse, rideaux et tapisserie automobile."
+>
+  <section class="bg-[var(--color-cream)]">
+    <div class="container-x py-14">
+      <p class="eyebrow mb-3">Le blog</p>
+      <h1 class="text-4xl md:text-5xl max-w-2xl mb-4">Conseils & inspiration tapisserie</h1>
+      <p class="text-[var(--color-muted)] max-w-xl">Guides pratiques d'un artisan tapissier-décorateur à Casablanca : bien rénover ses meubles, choisir ses tissus, comprendre les prix.</p>
+    </div>
+  </section>
+
+  {featured && (
+    <section class="container-x py-12">
+      <a href={`/${featured.id.replace(/^.*\//,'')}`} class="grid lg:grid-cols-2 gap-8 items-center group">
+        <div class="rounded-[var(--radius-card)] overflow-hidden border border-[var(--color-line)]">
+          <div class="aspect-[16/9] bg-[var(--color-cream)] grid place-items-center text-[var(--color-muted)]"><Icon name={featured.data.cover} size={48} /></div>
+        </div>
+        <div>
+          <p class="text-xs uppercase tracking-wider text-[var(--color-copper)] font-display font-semibold mb-2">À la une</p>
+          <h2 class="text-2xl md:text-3xl mb-3 group-hover:text-[var(--color-copper)] transition">{featured.data.title}</h2>
+          <p class="text-[var(--color-muted)] mb-4">{featured.data.excerpt}</p>
+          <span class="inline-flex items-center gap-2 text-[var(--color-copper)] font-display font-semibold">Lire l'article <Icon name="arrowRight" size={18} /></span>
+        </div>
+      </a>
+    </section>
+  )}
+
+  <section class="container-x pb-16">
+    <h2 class="text-2xl mb-6">Tous les articles</h2>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {rest.map((p) => (
+        <PostCard slug={p.id.replace(/^.*\//,'')} title={p.data.title} excerpt={p.data.excerpt} cover={p.data.cover} coverAlt={p.data.coverAlt} tags={p.data.tags} />
+      ))}
+    </div>
+  </section>
+
+  <section class="container-x pb-20">
+    <div class="rounded-[var(--radius-card)] bg-[var(--color-copper)] text-white p-10 text-center">
+      <h2 class="text-white text-2xl md:text-3xl mb-3">Un projet de tapisserie à Casablanca&nbsp;?</h2>
+      <p class="text-white/85 max-w-xl mx-auto mb-6">Devis gratuit et déplacement à domicile dans tout le Grand Casablanca.</p>
+      <div class="flex flex-wrap justify-center gap-3">
+        <a href={`${business.domain}/devis-gratuit`} class="btn bg-white text-[var(--color-ink)] hover:bg-white/90">Devis gratuit</a>
+        <a href={`https://wa.me/${business.whatsapp}`} class="btn btn-dark"><Icon name="whatsapp" size={18} /> WhatsApp</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

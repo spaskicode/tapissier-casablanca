@@ -1,0 +1,96 @@
+---
+import { business } from '@/data/business';
+import Icon from './Icon.astro';
+import type { Lang } from '@/i18n/ui';
+/**
+ * Formulaire de devis. Par défaut, poste vers Web3Forms (renseignez votre
+ * clé d'accès dans access_key). Un bouton compose aussi le message sur WhatsApp
+ * (amélioration progressive, aucun backend requis).
+ */
+interface Props { lang?: Lang; }
+const { lang = 'fr' } = Astro.props;
+const isAr = lang === 'ar';
+const L = {
+  name: isAr ? 'الاسم الكامل *' : 'Nom complet *',
+  phone: isAr ? 'رقم الهاتف *' : 'Téléphone *',
+  service: isAr ? 'الخدمة' : 'Prestation',
+  quartier: isAr ? 'الحي بالدار البيضاء' : 'Votre quartier à Casablanca',
+  quartierPh: isAr ? 'المعاريف، أولفا، بورغون...' : 'Maârif, Oulfa, Bourgogne...',
+  message: isAr ? 'صف لنا مشروعك *' : 'Décrivez votre projet *',
+  messagePh: isAr
+    ? 'مثال: تغيير الإسفنج والقماش لصالون مغربي على شكل L...'
+    : "Ex. : refaire la mousse et le tissu d'un salon marocain en L...",
+  submit: isAr ? 'أرسل طلبي' : 'Envoyer ma demande',
+  wa: isAr ? 'أرسل عبر واتساب' : 'Envoyer sur WhatsApp',
+  consent: isAr
+    ? 'بإرسال هذا النموذج، توافق على أن نتصل بك بخصوص طلبك.'
+    : "En envoyant ce formulaire, vous acceptez d'être recontacté au sujet de votre demande.",
+};
+const options = isAr
+  ? ['تنجيد الصالون المغربي', 'كنب / فوتاي', 'رأس السرير / الكابيتونيه', 'ستائر', 'تنجيد السيارات', 'كراسي', 'إسفنج حسب الطلب', 'أخرى']
+  : ['Réfection de salon marocain', 'Canapé / fauteuil', 'Tête de lit / capitonnage', 'Rideaux / voilages', 'Tapisserie automobile', 'Chaises', 'Mousse sur mesure', 'Autre'];
+---
+<form
+  id="devis-form"
+  action="https://api.web3forms.com/submit"
+  method="POST"
+  class="grid gap-4"
+>
+  <!-- Remplacez par votre clé Web3Forms (gratuit) : https://web3forms.com -->
+  <input type="hidden" name="access_key" value="[À COMPLÉTER : clé Web3Forms]" />
+  <input type="hidden" name="subject" value="Demande de devis — tapissier-casablanca.ma" />
+  <input type="checkbox" name="botcheck" class="hidden" style="display:none" aria-hidden="true" tabindex="-1" />
+
+  <div class="grid sm:grid-cols-2 gap-4">
+    <label class="block">
+      <span class="text-sm font-medium">{L.name}</span>
+      <input name="name" required class="mt-1 w-full rounded-lg border border-[var(--color-line)] px-4 py-3 bg-white focus:border-[var(--color-copper)] outline-none" />
+    </label>
+    <label class="block">
+      <span class="text-sm font-medium">{L.phone}</span>
+      <input name="phone" type="tel" required inputmode="tel" dir="ltr" class="mt-1 w-full rounded-lg border border-[var(--color-line)] px-4 py-3 bg-white focus:border-[var(--color-copper)] outline-none" />
+    </label>
+  </div>
+
+  <label class="block">
+    <span class="text-sm font-medium">{L.service}</span>
+    <select name="service" class="mt-1 w-full rounded-lg border border-[var(--color-line)] px-4 py-3 bg-white focus:border-[var(--color-copper)] outline-none">
+      {options.map((o) => <option>{o}</option>)}
+    </select>
+  </label>
+
+  <label class="block">
+    <span class="text-sm font-medium">{L.quartier}</span>
+    <input name="quartier" class="mt-1 w-full rounded-lg border border-[var(--color-line)] px-4 py-3 bg-white focus:border-[var(--color-copper)] outline-none" placeholder={L.quartierPh} />
+  </label>
+
+  <label class="block">
+    <span class="text-sm font-medium">{L.message}</span>
+    <textarea name="message" required rows="4" class="mt-1 w-full rounded-lg border border-[var(--color-line)] px-4 py-3 bg-white focus:border-[var(--color-copper)] outline-none" placeholder={L.messagePh}></textarea>
+  </label>
+
+  <div class="flex flex-wrap gap-3">
+    <button type="submit" class="btn btn-primary">{L.submit} <Icon name="arrowRight" size={18} /></button>
+    <a id="wa-send" href={`https://wa.me/${business.whatsapp}`} class="btn btn-wa"><Icon name="whatsapp" size={18} /> {L.wa}</a>
+  </div>
+  <p class="text-xs text-[var(--color-muted)]">{L.consent}</p>
+</form>
+
+<script is:inline define:vars={{ wa: business.whatsapp }}>
+  // Amélioration progressive : composer le message WhatsApp depuis les champs.
+  const form = document.getElementById('devis-form');
+  const waBtn = document.getElementById('wa-send');
+  waBtn?.addEventListener('click', (e) => {
+    const f = form;
+    if (!f) return;
+    const get = (n) => (f.querySelector(`[name="${n}"]`) || {}).value || '';
+    const txt = `Bonjour, je souhaite un devis.%0A` +
+      `Nom : ${encodeURIComponent(get('name'))}%0A` +
+      `Téléphone : ${encodeURIComponent(get('phone'))}%0A` +
+      `Prestation : ${encodeURIComponent(get('service'))}%0A` +
+      `Quartier : ${encodeURIComponent(get('quartier'))}%0A` +
+      `Projet : ${encodeURIComponent(get('message'))}`;
+    e.preventDefault();
+    window.open(`https://wa.me/${wa}?text=${txt}`, '_blank');
+  });
+</script>

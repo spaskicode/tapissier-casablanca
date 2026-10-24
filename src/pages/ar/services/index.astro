@@ -1,0 +1,42 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import ServiceCard from '@/components/ServiceCard.astro';
+import Icon from '@/components/Icon.astro';
+import { breadcrumbSchema } from '@/lib/schema';
+import { localizedPath as lp } from '@/i18n/ui';
+
+const lang = 'ar' as const;
+const services = (await getCollection('services'))
+  .filter((s) => s.data.lang === lang)
+  .sort((a, b) => a.data.order - b.data.order)
+  .map((s) => ({ slug: s.data.slug, title: s.data.title, excerpt: s.data.metaDescription, icon: s.data.icon }));
+
+const crumbs = [{ name: 'الرئيسية', url: '/ar' }, { name: 'الخدمات', url: '/ar/services' }];
+---
+<BaseLayout
+  lang={lang}
+  path="/services"
+  title="خدمات التنجيد بالدار البيضاء — ترميم وتفصيل | منجد الدار البيضاء"
+  description="جميع خدمات منجد الدار البيضاء: الصالون المغربي، الكنب، الفوتاي، رؤوس الأسرّة، الستائر، تنجيد السيارات، الإسفنج وأقمشة التنجيد. عرض سعر مجاني."
+  schemas={[breadcrumbSchema(crumbs)]}
+>
+  <Breadcrumbs crumbs={crumbs} />
+  <section class="container-x pt-8 pb-12">
+    <p class="eyebrow mb-3">خدماتنا</p>
+    <h1 class="text-4xl md:text-5xl mb-5 max-w-2xl">تنجيد الأثاث بالدار البيضاء</h1>
+    <div class="answer-box max-w-2xl mb-10">
+      من ترميم صالون مغربي قديم إلى تفصيل رأس سرير كابيتونيه حسب الطلب، يغطي «منجد الدار البيضاء»
+      جميع أعمال تنجيد الأثاث. اختر خدمتك أدناه أو اطلب مباشرة <strong>عرض سعر مجاني</strong>.
+    </div>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      {services.map((s) => <ServiceCard lang={lang} slug={s.slug} title={s.title} excerpt={s.excerpt} icon={s.icon} />)}
+    </div>
+    <div class="mt-12 rounded-[var(--radius-card)] bg-[var(--color-cream)] p-8 text-center">
+      <h2 class="text-2xl mb-2">لم تجد ما تبحث عنه؟</h2>
+      <p class="text-[var(--color-muted)] mb-5">صف لنا قطعتك وسنخبرك فوراً إن كان الأمر ممكناً.</p>
+      <a href={lp(lang,'/devis-gratuit')} class="btn btn-primary">اشرح لنا مشروعك <Icon name="arrowRight" size={18} /></a>
+    </div>
+  </section>
+</BaseLayout>

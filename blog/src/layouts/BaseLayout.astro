@@ -1,0 +1,61 @@
+---
+import '@/styles/global.css';
+import '@fontsource/exo/400.css';
+import '@fontsource/exo/600.css';
+import '@fontsource/exo/700.css';
+import '@fontsource/exo/800.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
+
+import SEO from '@/components/SEO.astro';
+import JsonLd from '@/components/JsonLd.astro';
+import Header from '@/components/Header.astro';
+import Footer from '@/components/Footer.astro';
+import Icon from '@/components/Icon.astro';
+import { organizationRef, blogWebsiteSchema } from '@/lib/schema';
+import { business } from '@/data/business';
+
+interface Props {
+  title: string;
+  description: string;
+  path: string;
+  image?: string;
+  type?: 'website' | 'article';
+  noindex?: boolean;
+  schemas?: Record<string, unknown>[];
+}
+const { title, description, path, image, type, noindex, schemas = [] } = Astro.props;
+---
+<!doctype html>
+<html lang="fr-MA" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#17191c" />
+    <link rel="alternate" type="application/rss+xml" title="Blog Tapissier Casablanca" href="/rss.xml" />
+    <SEO title={title} description={description} path={path} image={image} type={type} noindex={noindex} />
+    <JsonLd schema={organizationRef()} />
+    <JsonLd schema={blogWebsiteSchema()} />
+    {schemas.map((s) => <JsonLd schema={s} />)}
+  </head>
+  <body>
+    <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-50 focus:bg-[var(--color-ink)] focus:text-white focus:px-4 focus:py-2 focus:rounded">Aller au contenu</a>
+    <Header />
+    <main id="main"><slot /></main>
+    <Footer />
+    <!-- CTA mobile -->
+    <div class="fixed bottom-0 inset-x-0 z-40 md:hidden grid grid-cols-2 gap-px bg-[var(--color-line)]">
+      <a href={`tel:${business.phone}`} class="flex items-center justify-center gap-2 py-3.5 bg-[var(--color-ink)] text-white font-display font-semibold text-sm"><Icon name="phone" size={18} /> Appeler</a>
+      <a href={`https://wa.me/${business.whatsapp}`} class="flex items-center justify-center gap-2 py-3.5 bg-[#25d366] text-white font-display font-semibold text-sm"><Icon name="whatsapp" size={18} /> WhatsApp</a>
+    </div>
+    <div class="h-[52px] md:hidden" aria-hidden="true"></div>
+  </body>
+</html>
+
+<style is:global>
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  .focus\:not-sr-only:focus{position:static;width:auto;height:auto;margin:0;overflow:visible;clip:auto;white-space:normal}
+</style>

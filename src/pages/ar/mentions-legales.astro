@@ -1,0 +1,41 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import { business } from '@/data/business';
+const lang = 'ar' as const;
+const crumbs = [{ name: 'الرئيسية', url: '/ar' }, { name: 'الإشعارات القانونية', url: '/ar/mentions-legales' }];
+---
+<BaseLayout
+  lang={lang}
+  path="/mentions-legales"
+  title="الإشعارات القانونية — منجد الدار البيضاء"
+  description="الإشعارات القانونية لموقع tapissier-casablanca.ma."
+  noindex={true}
+>
+  <Breadcrumbs crumbs={crumbs} />
+  <section class="container-x pt-8 pb-16 max-w-3xl">
+    <h1 class="text-3xl md:text-4xl mb-8">الإشعارات القانونية</h1>
+    <div class="prose-local space-y-5 text-[var(--color-ink-2)]">
+      <div>
+        <h2 class="text-xl font-display font-bold mb-2">ناشر الموقع</h2>
+        <p>{business.brand}<br/>الاسم التجاري: {business.legalName}<br/>العنوان: {business.address.street}، الدار البيضاء<br/>الهاتف: {business.phoneDisplay}<br/>البريد الإلكتروني: {business.email}</p>
+      </div>
+      <div>
+        <h2 class="text-xl font-display font-bold mb-2">المعرّفات</h2>
+        <p>ICE: [À COMPLÉTER]<br/>RC: [À COMPLÉTER]<br/>IF: [À COMPLÉTER]</p>
+      </div>
+      <div>
+        <h2 class="text-xl font-display font-bold mb-2">الاستضافة</h2>
+        <p>[À COMPLÉTER : اسم وعنوان المستضيف]</p>
+      </div>
+      <div>
+        <h2 class="text-xl font-display font-bold mb-2">الملكية الفكرية</h2>
+        <p>جميع محتويات هذا الموقع (النصوص، الصور، الشعار) ملك لـ {business.brand}، ما لم يُذكر خلاف ذلك. يُمنع أي استنساخ دون إذن.</p>
+      </div>
+      <div>
+        <h2 class="text-xl font-display font-bold mb-2">المعطيات الشخصية</h2>
+        <p>تُستعمل المعلومات المرسلة عبر نموذج الاتصال فقط للرد على طلب عرض السعر، ولا تُباع ولا تُمنح لأي طرف ثالث.</p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

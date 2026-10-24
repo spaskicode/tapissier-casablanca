@@ -1,0 +1,55 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import Placeholder from '@/components/Placeholder.astro';
+import Icon from '@/components/Icon.astro';
+import { breadcrumbSchema } from '@/lib/schema';
+import { business } from '@/data/business';
+import { localizedPath as lp } from '@/i18n/ui';
+
+const lang = 'ar' as const;
+const crumbs = [{ name: 'الرئيسية', url: '/ar' }, { name: 'من نحن', url: '/ar/a-propos' }];
+const aboutSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'AboutPage',
+  name: 'من نحن — منجد الدار البيضاء',
+  url: `${business.domain}/ar/a-propos`,
+};
+const values = [
+  { icon: 'shield', t: 'الصدق', d: 'لا نجعلك تدفع ثمن الجديد إذا كان الترميم كافياً.' },
+  { icon: 'sparkle', t: 'تشطيب متقن', d: 'خياطة نظيفة، أقمشة مشدودة، وتفاصيل متقنة.' },
+  { icon: 'mapPin', t: 'القرب', d: 'حرفي يتنقل إليك في الدار البيضاء الكبرى.' },
+];
+---
+<BaseLayout
+  lang={lang}
+  path="/a-propos"
+  title="من نحن — حرفي منجد بالدار البيضاء | منجد الدار البيضاء"
+  description="منجد الدار البيضاء، حرفي منجد ومزخرف: ترميم وتفصيل الصالونات المغربية والكنب ورؤوس الأسرّة. حرفة وقرب وتشطيب متقن."
+  schemas={[aboutSchema, breadcrumbSchema(crumbs)]}
+>
+  <Breadcrumbs crumbs={crumbs} />
+  <section class="container-x pt-8 pb-14 grid lg:grid-cols-2 gap-10 items-center">
+    <div>
+      <p class="eyebrow mb-3">من نحن</p>
+      <h1 class="text-4xl md:text-5xl mb-5">حرفي منجد في خدمة الدار البيضاء</h1>
+      <p class="text-[var(--color-ink-2)] mb-4">«منجد الدار البيضاء» ورشة تنجيد أثاث مقرها الدار البيضاء. مهنتنا: إعادة الحياة إلى أثاثك وإنجاز قطع حسب الطلب — صالونات مغربية، كنب، فوتاي، رؤوس أسرّة وتنجيد السيارات.</p>
+      <p class="text-[var(--color-muted)] mb-4">منذ [À COMPLÉTER : سنة التأسيس]، نشتغل لفائدة العائلات والرياضات والمهنيين في الدار البيضاء الكبرى. منهجنا بسيط: نصيحة صادقة، عمل متقن، وأثاث يدوم.</p>
+      <p class="text-[var(--color-muted)]">[À COMPLÉTER : بضعة أسطر عن المؤسس / الورشة / سنوات الخبرة، تُملأ بمعلوماتك الحقيقية.]</p>
+      <a href={lp(lang,'/devis-gratuit')} class="btn btn-primary mt-7">اطلب عرض سعر <Icon name="arrowRight" size={18} /></a>
+    </div>
+    <Placeholder alt="حرفي منجد يشتغل في ورشته بالدار البيضاء" ratio="4/3" icon="scissors" label="ورشتنا" />
+  </section>
+
+  <section class="container-x py-10">
+    <div class="grid sm:grid-cols-3 gap-5">
+      {values.map((v) => (
+        <div class="card p-6">
+          <span class="grid place-items-center w-12 h-12 rounded-lg bg-[var(--color-copper-soft)] text-[var(--color-copper)] mb-4"><Icon name={v.icon} size={24} /></span>
+          <h2 class="text-xl mb-1.5">{v.t}</h2>
+          <p class="text-[var(--color-muted)] text-[0.95rem]">{v.d}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

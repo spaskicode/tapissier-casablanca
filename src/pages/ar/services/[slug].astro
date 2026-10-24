@@ -1,0 +1,145 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import Faq from '@/components/Faq.astro';
+import Placeholder from '@/components/Placeholder.astro';
+import ServiceCard from '@/components/ServiceCard.astro';
+import Icon from '@/components/Icon.astro';
+import { serviceSchema, faqSchema, breadcrumbSchema, howToSchema } from '@/lib/schema';
+import { business } from '@/data/business';
+import { localizedPath as lp } from '@/i18n/ui';
+
+export async function getStaticPaths() {
+  const all = await getCollection('services');
+  return all
+    .filter((s) => s.data.lang === 'ar')
+    .map((entry) => ({ params: { slug: entry.data.slug }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const d = entry.data;
+const lang = 'ar' as const;
+const { Content } = await render(entry);
+
+const url = `${business.domain}/ar/services/${d.slug}`;
+const all = await getCollection('services');
+const related = all
+  .filter((s) => s.data.lang === 'ar' && d.related.includes(s.data.slug))
+  .map((s) => ({ slug: s.data.slug, title: s.data.title, excerpt: s.data.metaDescription, icon: s.data.icon }));
+
+const crumbs = [
+  { name: 'الرئيسية', url: '/ar' },
+  { name: 'الخدمات', url: '/ar/services' },
+  { name: d.title, url: `/ar/services/${d.slug}` },
+];
+
+const dateAr = new Intl.DateTimeFormat('ar-MA', {
+  day: 'numeric', month: 'long', year: 'numeric',
+}).format(d.updated);
+const isoUpdated = d.updated.toISOString().slice(0, 10);
+---
+<BaseLayout
+  lang={lang}
+  path={`/services/${d.slug}`}
+  title={d.metaTitle}
+  description={d.metaDescription}
+  schemas={[
+    serviceSchema({ name: d.title, description: d.metaDescription, url, serviceType: d.primaryKeyword }),
+    faqSchema(d.faq),
+    breadcrumbSchema(crumbs),
+    ...(d.steps.length
+      ? [howToSchema({ name: `كيف تتم ${d.title} بالدار البيضاء`, description: d.answer, url, steps: d.steps })]
+      : []),
+  ]}
+>
+  <Breadcrumbs crumbs={crumbs} />
+
+  <section class="container-x pt-8 pb-12 grid lg:grid-cols-2 gap-10 items-center">
+    <div>
+      <p class="eyebrow mb-3"><Icon name={d.icon} size={16} /> خدمة</p>
+      <h1 class="text-4xl md:text-5xl mb-5">{d.title}</h1>
+      <div class="answer-box mb-4">{d.answer}</div>
+      <p class="text-sm text-[var(--color-muted)] mb-6">
+        آخر تحديث: <time datetime={isoUpdated}>{dateAr}</time> · الدار البيضاء والدار البيضاء الكبرى
+      </p>
+      <div class="flex flex-wrap gap-3">
+        <a href={lp(lang,'/devis-gratuit')} class="btn btn-primary">عرض سعر مجاني <Icon name="arrowRight" size={18} /></a>
+        <a href={`https://wa.me/${business.whatsapp}`} class="btn btn-wa"><Icon name="whatsapp" size={18} /> واتساب</a>
+      </div>
+    </div>
+    <Placeholder alt={d.heroAlt} ratio="4/3" icon={d.icon} label={d.title} />
+  </section>
+
+  <section class="container-x">
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {[
+        { icon: 'sofa', k: 'الخدمة', v: d.eav.quoi },
+        { icon: 'star', k: 'لمن', v: d.eav.pourQui },
+        { icon: 'clock', k: 'المدة', v: d.eav.delai },
+        { icon: 'shield', k: 'الضمان', v: d.eav.garantie },
+      ].map((f) => (
+        <div class="card p-5">
+          <span class="text-[var(--color-copper)]"><Icon name={f.icon} size={22} /></span>
+          <p class="text-xs uppercase tracking-wider text-[var(--color-muted)] mt-3">{f.k}</p>
+          <p class="font-display font-semibold mt-0.5">{f.v}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="container-x py-14">
+    <div class="grid lg:grid-cols-3 gap-10">
+      <article class="lg:col-span-2 prose-local max-w-none
+        [&_h2]:text-2xl [&_h2]:md:text-3xl [&_h2]:mt-10 [&_h2]:mb-4
+        [&_h3]:text-xl [&_h3]:mt-7 [&_h3]:mb-3
+        [&_p]:mb-4 [&_p]:text-[var(--color-ink-2)]
+        [&_ul]:my-4 [&_ul]:pr-5 [&_ul]:list-disc [&_li]:mb-2
+        [&_table]:w-full [&_table]:my-6 [&_table]:border-collapse
+        [&_th]:bg-[var(--color-cream)] [&_th]:text-right [&_th]:p-3 [&_th]:border [&_th]:border-[var(--color-line)]
+        [&_td]:p-3 [&_td]:border [&_td]:border-[var(--color-line)]">
+        <Content />
+
+        {d.steps.length > 0 && (
+          <div class="mt-10">
+            <h2>كيف تتم الخدمة؟</h2>
+            <ol class="space-y-4 !pr-0 !list-none">
+              {d.steps.map((s, i) => (
+                <li class="flex gap-4" id={`etape-${i + 1}`}>
+                  <span class="grid place-items-center shrink-0 w-9 h-9 rounded-full bg-[var(--color-copper)] text-white font-display font-bold text-sm">{i + 1}</span>
+                  <div><strong class="font-display">{s.title}</strong><p class="!mb-0 text-[var(--color-muted)]">{s.text}</p></div>
+                </li>
+              ))}
+            </ol>
+          </div>
+        )}
+      </article>
+
+      <aside class="lg:sticky lg:top-24 h-max space-y-5">
+        <div class="card p-6">
+          <p class="text-xs uppercase tracking-wider text-[var(--color-muted)]">السعر</p>
+          <p class="text-2xl font-display font-extrabold mt-1">{d.priceFrom ?? 'حسب عرض السعر'}</p>
+          <p class="text-sm text-[var(--color-muted)] mt-1">{d.priceNote}</p>
+          <a href={lp(lang,'/devis-gratuit')} class="btn btn-primary w-full mt-4">اطلب عرض سعر</a>
+          <a href={`tel:${business.phone}`} class="btn btn-ghost w-full mt-2.5" dir="ltr"><Icon name="phone" size={16} /> {business.phoneDisplay}</a>
+        </div>
+        <div class="card p-6 bg-[var(--color-cream)]">
+          <p class="font-display font-bold mb-2">المناطق المخدومة</p>
+          <p class="text-sm text-[var(--color-muted)]">الدار البيضاء وجميع أنحاء الدار البيضاء الكبرى: المعاريف، أولفا، بورغون، غوتييه، عين الذياب، سيدي معروف، بوسكورة.</p>
+          <a href={lp(lang,'/zones')} class="inline-flex items-center gap-1.5 text-[var(--color-copper)] font-display font-semibold text-sm mt-3">عرض المناطق <Icon name="arrowRight" size={15} /></a>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <Faq lang={lang} items={d.faq} title={`أسئلة شائعة — ${d.title}`} />
+
+  {related.length > 0 && (
+    <section class="container-x py-10">
+      <h2 class="text-2xl md:text-3xl mb-6">خدمات ذات صلة</h2>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        {related.map((r) => <ServiceCard lang={lang} slug={r.slug} title={r.title} excerpt={r.excerpt} icon={r.icon} />)}
+      </div>
+    </section>
+  )}
+</BaseLayout>

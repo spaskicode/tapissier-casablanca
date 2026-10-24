@@ -1,0 +1,49 @@
+---
+import { business } from '@/data/business';
+import type { Lang } from '@/i18n/ui';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Chemin canonique FR, sans domaine ni préfixe de langue. Ex: "/services/salon-marocain" */
+  path: string;
+  lang: Lang;
+  image?: string;
+  type?: 'website' | 'article';
+  noindex?: boolean;
+}
+
+const { title, description, path, lang, image, type = 'website', noindex = false } = Astro.props;
+
+const SITE = business.domain;
+const clean = path === '/' ? '' : path.replace(/\/$/, '');
+const frUrl = `${SITE}${clean || ''}` || SITE;
+const arUrl = `${SITE}/ar${clean}`;
+const canonical = lang === 'fr' ? (frUrl || SITE) : arUrl;
+const ogImage = image ?? `${SITE}/og-default.jpg`;
+const locale = lang === 'fr' ? 'fr_MA' : 'ar_MA';
+---
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+{noindex && <meta name="robots" content="noindex, nofollow" />}
+
+<!-- hreflang : versions FR / AR + x-default -->
+<link rel="alternate" hreflang="fr-MA" href={frUrl || SITE} />
+<link rel="alternate" hreflang="ar-MA" href={arUrl} />
+<link rel="alternate" hreflang="x-default" href={frUrl || SITE} />
+
+<!-- Open Graph -->
+<meta property="og:type" content={type} />
+<meta property="og:site_name" content={business.brand} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:locale" content={locale} />
+<meta property="og:image" content={ogImage} />
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />

@@ -1,0 +1,90 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import Faq from '@/components/Faq.astro';
+import PostCard from '@/components/PostCard.astro';
+import Placeholder from '@/components/Placeholder.astro';
+import Icon from '@/components/Icon.astro';
+import { articleSchema, faqSchema, breadcrumbSchema } from '@/lib/schema';
+import { business } from '@/data/business';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  return posts.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const d = entry.data;
+const { Content } = await render(entry);
+const slug = entry.id;
+
+const all = await getCollection('posts');
+const related = all
+  .filter((p) => d.related.includes(p.id) && p.id !== slug)
+  .slice(0, 3);
+
+const dateFmt = new Intl.DateTimeFormat('fr-MA', { year: 'numeric', month: 'long', day: 'numeric' });
+const crumbs = [
+  { name: 'Blog', url: '/' },
+  { name: d.title, url: `/${slug}` },
+];
+---
+<BaseLayout
+  path={`/${slug}`}
+  title={d.metaTitle}
+  description={d.metaDescription}
+  type="article"
+  schemas={[
+    articleSchema({ title: d.title, description: d.metaDescription, slug, author: d.author, datePublished: d.datePublished, dateModified: d.dateModified }),
+    faqSchema(d.faq),
+    breadcrumbSchema(crumbs),
+  ]}
+>
+  <Breadcrumbs crumbs={crumbs} />
+  <article class="container-x pt-8 pb-10 max-w-3xl mx-auto">
+    {d.tags.length > 0 && <p class="text-xs uppercase tracking-wider text-[var(--color-copper)] font-display font-semibold mb-3">{d.tags[0]}</p>}
+    <h1 class="text-3xl md:text-5xl leading-[1.08] mb-4">{d.title}</h1>
+    <div class="flex items-center gap-3 text-sm text-[var(--color-muted)] mb-6">
+      <span>{d.author}</span><span aria-hidden="true">·</span>
+      <time datetime={d.dateModified.toISOString()}>Mis à jour le {dateFmt.format(d.dateModified)}</time>
+    </div>
+    <Placeholder alt={d.coverAlt} ratio="16/9" icon={d.cover} />
+    <div class="answer-box my-7">{d.answer}</div>
+
+    <div class="prose-local max-w-none
+      [&_h2]:text-2xl [&_h2]:md:text-3xl [&_h2]:mt-9 [&_h2]:mb-3 [&_h2]:font-[var(--font-display)]
+      [&_h3]:text-xl [&_h3]:mt-6 [&_h3]:mb-2.5
+      [&_p]:mb-4 [&_p]:text-[var(--color-ink-2)] [&_p]:leading-relaxed
+      [&_ul]:my-4 [&_ul]:pl-5 [&_ul]:list-disc [&_li]:mb-2
+      [&_ol]:my-4 [&_ol]:pl-5 [&_ol]:list-decimal
+      [&_table]:w-full [&_table]:my-6 [&_table]:border-collapse
+      [&_th]:bg-[var(--color-cream)] [&_th]:text-left [&_th]:p-3 [&_th]:border [&_th]:border-[var(--color-line)]
+      [&_td]:p-3 [&_td]:border [&_td]:border-[var(--color-line)]
+      [&_blockquote]:border-l-4 [&_blockquote]:border-[var(--color-copper)] [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-[var(--color-muted)]">
+      <Content />
+    </div>
+
+    <!-- Pont vers la page service (money page) -->
+    <div class="mt-9 rounded-[var(--radius-card)] bg-[var(--color-ink)] text-white p-7 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div>
+        <p class="font-display font-bold text-white text-lg">Besoin d'un professionnel&nbsp;?</p>
+        <p class="text-white/70 text-sm">{d.bridge.label}</p>
+      </div>
+      <a href={`${business.domain}${d.bridge.url}`} class="btn btn-primary shrink-0">Voir le service <Icon name="arrowRight" size={18} /></a>
+    </div>
+  </article>
+
+  <Faq items={d.faq} title={`${d.title} — questions fréquentes`} />
+
+  {related.length > 0 && (
+    <section class="container-x py-10 max-w-5xl mx-auto">
+      <h2 class="text-2xl mb-6">À lire aussi</h2>
+      <div class="grid sm:grid-cols-3 gap-6">
+        {related.map((p) => (
+          <PostCard slug={p.id} title={p.data.title} excerpt={p.data.excerpt} cover={p.data.cover} coverAlt={p.data.coverAlt} tags={p.data.tags} />
+        ))}
+      </div>
+    </section>
+  )}
+</BaseLayout>

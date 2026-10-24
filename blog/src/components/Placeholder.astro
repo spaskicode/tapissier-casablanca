@@ -1,0 +1,36 @@
+---
+import Icon from './Icon.astro';
+/**
+ * Emplacement photo. Les vraies photos (chantiers réels) seront fournies par
+ * le client. Ce composant réserve l'espace (ratio => zéro CLS) et porte un
+ * texte alternatif descriptif en français pour l'accessibilité et le SEO.
+ * Remplacez-le par <Image> (astro:assets) quand les photos seront prêtes.
+ */
+interface Props {
+  alt: string;
+  ratio?: string;   // ex. "16/9", "4/3", "1/1"
+  icon?: string;
+  label?: string;
+  class?: string;
+  rounded?: boolean;
+}
+const { alt, ratio = '4/3', icon = 'sofa', label, class: cls = '', rounded = true } = Astro.props;
+---
+<figure
+  class={`relative overflow-hidden bg-[var(--color-cream)] border border-[var(--color-line)] ${rounded ? 'rounded-[var(--radius-card)]' : ''} ${cls}`}
+  style={`aspect-ratio:${ratio}`}
+  role="img"
+  aria-label={alt}
+>
+  <div class="absolute inset-0 grid place-items-center text-[var(--color-muted)]">
+    <div class="flex flex-col items-center gap-2 px-4 text-center">
+      <Icon name={icon} size={38} />
+      <span class="text-xs tracking-wide uppercase font-[var(--font-display)] opacity-70">
+        {label ?? 'Photo à venir'}
+      </span>
+    </div>
+  </div>
+  <!-- motif béton subtil -->
+  <div class="absolute inset-0 opacity-[0.04] pointer-events-none"
+       style="background-image:radial-gradient(circle at 20% 20%,#000 1px,transparent 1px);background-size:14px 14px"></div>
+</figure>

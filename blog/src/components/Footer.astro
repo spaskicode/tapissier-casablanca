@@ -1,0 +1,43 @@
+---
+import { business } from '@/data/business';
+import Icon from './Icon.astro';
+const MAIN = business.domain;
+const year = new Date().getFullYear();
+const services = [
+  ['Salon marocain', '/services/salon-marocain'],
+  ['Canapés & fauteuils', '/services/canapes-et-fauteuils'],
+  ['Têtes de lit', '/services/tete-de-lit-et-capitonnage'],
+  ['Rideaux & voilages', '/services/rideaux-et-voilages'],
+  ['Tapisserie automobile', '/services/tapisserie-automobile'],
+];
+---
+<footer class="bg-[var(--color-ink)] text-white/80 mt-20">
+  <div class="container-x py-14 grid gap-10 md:grid-cols-3">
+    <div>
+      <div class="flex items-center gap-2.5 mb-4">
+        <span class="grid place-items-center w-9 h-9 rounded-md bg-[var(--color-copper)] text-white"><Icon name="sofa" size={20} stroke={2} /></span>
+        <span class="font-display font-extrabold text-white">Tapissier Casablanca</span>
+      </div>
+      <p class="text-sm text-white/60">Guides, inspiration et conseils d'un artisan tapissier-décorateur à Casablanca.</p>
+      <a href={`${MAIN}`} class="inline-flex items-center gap-1.5 text-[var(--color-copper)] font-display font-semibold text-sm mt-4">Retour au site <Icon name="arrowRight" size={15} /></a>
+    </div>
+    <nav>
+      <h3 class="text-white font-display font-bold mb-4 text-sm uppercase tracking-wider">Nos services</h3>
+      <ul class="space-y-2.5 text-sm">
+        {services.map(([label, href]) => (<li><a href={`${MAIN}${href}`} class="hover:text-[var(--color-copper)]">{label}</a></li>))}
+      </ul>
+    </nav>
+    <div>
+      <h3 class="text-white font-display font-bold mb-4 text-sm uppercase tracking-wider">Contact</h3>
+      <ul class="space-y-3 text-sm">
+        <li class="flex gap-2.5"><Icon name="phone" size={17} /><a href={`tel:${business.phone}`} class="hover:text-[var(--color-copper)]">{business.phoneDisplay}</a></li>
+        <li class="flex gap-2.5"><Icon name="whatsapp" size={17} /><a href={`https://wa.me/${business.whatsapp}`} class="hover:text-[var(--color-copper)]">WhatsApp</a></li>
+        <li class="flex gap-2.5"><Icon name="mapPin" size={17} /><span>Casablanca & Grand Casablanca</span></li>
+      </ul>
+      <a href={`${MAIN}/devis-gratuit`} class="btn btn-primary mt-5 w-full">Devis gratuit</a>
+    </div>
+  </div>
+  <div class="border-t border-white/10">
+    <div class="container-x py-5 text-xs text-white/50">© {year} Tapissier Casablanca. Tous droits réservés.</div>
+  </div>
+</footer>

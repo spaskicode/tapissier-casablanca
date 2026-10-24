@@ -1,0 +1,90 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import Faq from '@/components/Faq.astro';
+import Icon from '@/components/Icon.astro';
+import { faqSchema, breadcrumbSchema } from '@/lib/schema';
+import { business } from '@/data/business';
+import { localizedPath as lp } from '@/i18n/ui';
+
+const lang = 'ar' as const;
+const crumbs = [{ name: 'الرئيسية', url: '/ar' }, { name: 'الأسعار', url: '/ar/tarifs' }];
+
+const grille = [
+  { s: 'تنجيد صالون مغربي', u: 'بالمتر الطولي', p: '[À COMPLÉTER] درهم' },
+  { s: 'تنجيد كنبة', u: 'للقطعة', p: '[À COMPLÉTER] درهم' },
+  { s: 'تنجيد فوتاي', u: 'للقطعة', p: '[À COMPLÉTER] درهم' },
+  { s: 'رأس سرير حسب الطلب', u: 'حسب العرض', p: '[À COMPLÉTER] درهم' },
+  { s: 'تنجيد كرسي', u: 'للكرسي', p: '[À COMPLÉTER] درهم' },
+  { s: 'تنجيد السيارات (سقف السيارة)', u: 'للسيارة', p: '[À COMPLÉTER] درهم' },
+  { s: 'إسفنج عالي الكثافة', u: 'حسب المقاسات', p: '[À COMPLÉTER] درهم' },
+  { s: 'ستائر حسب الطلب', u: 'للنافذة', p: '[À COMPLÉTER] درهم' },
+];
+
+const faq = [
+  { question: 'كيف تُحتسب أسعار التنجيد عندكم؟', answer: 'تعتمد أسعارنا على ثلاثة عوامل: الكمية (المتر الطولي للصالون أو عدد القطع)، القماش المختار، وكثافة الإسفنج. حالة الهيكل تؤثر أيضاً. لذلك نقدم عرض سعر دقيقاً بعد أخذ المقاسات مجاناً في المنزل.' },
+  { question: 'هل الترميم أرخص من شراء أثاث جديد؟', answer: 'في أغلب الحالات نعم — خاصة لأثاث جيد الصنع هيكله سليم. تحتفظ بالهيكل وتدفع فقط ثمن الإسفنج والحشو والقماش، وتختار مادة أكثر مقاومة من الأصلية.' },
+  { question: 'هل عرض السعر مؤدى عنه؟', answer: 'لا. أخذ المقاسات وعرض السعر في المنزل مجانيان ودون أي التزام، في جميع أنحاء الدار البيضاء الكبرى.' },
+  { question: 'هل توجد أسعار تفضيلية للكميات؟', answer: 'نعم، بالنسبة لمجموعة كراسي متطابقة أو عدة قطع، يكون سعر الوحدة أقل عادة. حدّد الكمية عند طلب عرض السعر.' },
+];
+---
+<BaseLayout
+  lang={lang}
+  path="/tarifs"
+  title="أسعار التنجيد بالدار البيضاء: صالون، كنب، فوتاي | منجد الدار البيضاء"
+  description="كيف تُحتسب أسعار التنجيد بالدار البيضاء: تنجيد الصالون المغربي والكنب والفوتاي ورؤوس الأسرّة. عرض سعر مجاني في المنزل."
+  schemas={[faqSchema(faq), breadcrumbSchema(crumbs)]}
+>
+  <Breadcrumbs crumbs={crumbs} />
+  <section class="container-x pt-8 pb-10">
+    <p class="eyebrow mb-3">الأسعار</p>
+    <h1 class="text-4xl md:text-5xl mb-5 max-w-2xl">أسعار المنجد بالدار البيضاء</h1>
+    <div class="answer-box max-w-2xl">
+      يعتمد ثمن التنجيد على <strong>الكمية</strong> (المتر الطولي أو عدد القطع)، و<strong>القماش</strong>
+      المختار، و<strong>كثافة الإسفنج</strong>. بدل إعطاء سعر عشوائي، نأخذ المقاسات عندك ونقدم عرض سعر
+      واضحاً ومجانياً.
+    </div>
+  </section>
+
+  <section class="container-x pb-6">
+    <div class="card overflow-hidden">
+      <table class="w-full border-collapse">
+        <thead>
+          <tr class="bg-[var(--color-cream)] text-right">
+            <th class="p-4 font-display">الخدمة</th>
+            <th class="p-4 font-display hidden sm:table-cell">الوحدة</th>
+            <th class="p-4 font-display">النطاق السعري</th>
+          </tr>
+        </thead>
+        <tbody>
+          {grille.map((r) => (
+            <tr class="border-t border-[var(--color-line)]">
+              <td class="p-4">{r.s}</td>
+              <td class="p-4 text-[var(--color-muted)] hidden sm:table-cell">{r.u}</td>
+              <td class="p-4 font-medium">{r.p}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <p class="text-sm text-[var(--color-muted)] mt-3">
+      <Icon name="shield" size={15} class="inline text-[var(--color-copper)]" />
+      النطاقات السعرية تُملأ بأسعارك الحقيقية. كل مشروع يحصل على عرض سعر دقيق بعد أخذ المقاسات.
+    </p>
+  </section>
+
+  <section class="container-x py-8">
+    <div class="rounded-[var(--radius-card)] bg-[var(--color-ink)] text-white p-8 md:p-10 flex flex-col md:flex-row items-center justify-between gap-5">
+      <div>
+        <h2 class="text-white text-2xl md:text-3xl mb-1">تريد سعراً دقيقاً لأثاثك؟</h2>
+        <p class="text-white/70">عرض سعر مجاني ودون التزام، في المنزل بالدار البيضاء الكبرى.</p>
+      </div>
+      <div class="flex gap-3 shrink-0">
+        <a href={lp(lang,'/devis-gratuit')} class="btn btn-primary">عرض سعر مجاني</a>
+        <a href={`https://wa.me/${business.whatsapp}`} class="btn btn-wa"><Icon name="whatsapp" size={18} /> واتساب</a>
+      </div>
+    </div>
+  </section>
+
+  <Faq lang={lang} items={faq} title="أسئلة شائعة حول الأسعار" />
+</BaseLayout>
